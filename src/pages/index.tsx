@@ -1,18 +1,19 @@
-import {Flex, Stack, Icon, Text, Image, Box, SimpleGrid, VStack } from '@chakra-ui/react';
+import {Flex, Stack, Icon, Text, Image, Box, SimpleGrid, VStack, FormControl, InputGroup } from '@chakra-ui/react';
 import {useState, FormEvent, useContext, useEffect} from 'react';
 
 import { Input } from '../components/Input';
+import { Logo } from '../components/Logo';
 import { ButtonDefault } from '../components/Button';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import LogoSvg from '@assets/logo.svg';
 import Link from 'next/link';
 
 import * as yup from 'yup'
 import { SubmitHandler, useForm } from "react-hook-form";
 import {yupResolver } from "@hookform/resolvers/yup"
+import { RiKeyboardBoxFill } from 'react-icons/ri';
 
 type FormDataProps = {
   email: string;
@@ -26,7 +27,7 @@ export default function SignIn() {
   const signInFormSchema = yup.object().shape({   
     email: yup.string().required('E-mail obrigatório').email('E-mail Inválido'),
     password: yup.string().required('Senha obrigatória').min(6, 'No mínimo 6 caracteres'),    
-  })  
+  });  
 
   const {register, handleSubmit, formState} = useForm<FormDataProps>({
     resolver: yupResolver(signInFormSchema)
@@ -34,17 +35,8 @@ export default function SignIn() {
 
   const {errors} = formState
 
-  function showSuccessToast() {
-    toast.success('Seu login foi realizado com sucesso!', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
+  function goSignUp() {
+    
   }
 
   async function handleSignIn({email, password }: FormDataProps) {
@@ -57,14 +49,24 @@ export default function SignIn() {
       }
 
       console.log(data)
-      
-      showSuccessToast()
+
+      toast.success('Seu login foi realizado com sucesso!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      setIsLoading(false);
 
     } catch (error) {
-      
         
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }      
   }  
 
@@ -85,31 +87,46 @@ export default function SignIn() {
         mb={50}
         borderRadius={8}
       >  
-        <Flex flexDir="column" mb={10} mt={10}>
-          {/* <LogoSvg/> */}
+        <Flex flexDir="column" mb={10} mt={10} justify="center" align="center">
+          <Box w="50px" h="50px" bg="gray.300">
+            {/* <Logo/> */}
+          </Box>
           <Text fontSize="35"color="gray.700" fontWeight="bold" textAlign="center"> marketspace</Text>
           <Text fontSize="14" color="gray.700" textAlign="center"> Seu espaço de compra e venda</Text>
         </Flex>
 
         <Text fontSize="14" color="gray.700" textAlign='center'>Acesse sua conta</Text>
 
-        <VStack px={20} spacing={5} mb={30}>
-          <Input 
-            placeholder='E-mail'
-            fontSize="sm"
-            type='email' 
-            {...register("email")}
-            error={errors.email}
-          />                   
-      
-          <Input              
-            placeholder='Senha'
-            fontSize="sm"
-            type='password'
-            {...register("password")}
-            error={errors.password}
-            // rightIcon={<Icon as={RiEyeLine} fontSize="35"/>}
-          /> 
+        <VStack px={20} spacing={3} mb={20}>
+          <Stack w={'100%'}>
+            <FormControl>
+              <Input
+                placeholder='Email'
+                name='email'
+                type={'email'}
+                error={errors.email}
+                register={register}
+                options={{
+                  required: 'É necessário informar um email.',
+                }}
+              />
+            </FormControl>
+          </Stack>
+
+          <Stack w={'100%'}>
+            <InputGroup size={['md']}>
+              <Input
+                placeholder='Senha'
+                name='password'
+                error={errors?.password}
+                register={register}
+                isPassword
+                options={{
+                  required: 'É necessário informar uma senha.'
+                }}
+              />
+            </InputGroup>
+          </Stack>
 
           <ButtonDefault
             title="Entrar" 
@@ -121,21 +138,21 @@ export default function SignIn() {
    
         </VStack>   
 
-        <VStack p={20} spacing={5}> 
+        <VStack p={20} spacing={3}> 
           <Text fontSize="14" color="gray.700" textAlign='center'>Ainda não tem acesso?</Text>
 
           {/* <Link href="/lancamentos" passHref> */}
-            {/* <ButtonDefault 
+            <ButtonDefault 
               title="Criar uma conta" 
               size="total"   
               variant="default"  
-              onClick={handleSignIn}
-              isLoading={isLoading}
-            /> */}
-            
+              onClick={goSignUp}
+              // isLoading={isLoading}
+            />           
           {/* </Link>         */}
         </VStack> 
-      </Stack>                    
+      </Stack>
+      <ToastContainer/>                    
     </Flex>
   )
 }

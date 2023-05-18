@@ -1,42 +1,68 @@
-import {Flex, Button, Stack, Icon, Text, Image, Box, SimpleGrid, VStack, IconButton } from '@chakra-ui/react';
-import LogoSvg from '@assets/logo.svg';
-
-import {useState, FormEvent, useContext, useEffect} from 'react'
-
-import Link from 'next/link'
+import {Flex, Button, Stack, Icon, Text, Image, Box, SimpleGrid, VStack, 
+  IconButton, FormControl, InputGroup } from '@chakra-ui/react'
+;
+import {useState, FormEvent, useContext, useEffect} from 'react';
 import { Input } from '../components/Input';
+import { ButtonDefault } from '../components/Button';
+
+import LogoSvg from '@assets/logo.svg';
+import Link from 'next/link';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import * as yup from 'yup'
 import { SubmitHandler, useForm } from "react-hook-form";
-import {yupResolver } from "@hookform/resolvers/yup"
+import {yupResolver } from "@hookform/resolvers/yup";
+
 
 type FormDataProps = {
   name: string;
   email: string;
-  telefone: string; //DEPOIS TRANSFORMAR PRA NUMERO
+  telefone: string;
   password: string;
   password_confirm: string;
 }
-
 
 export default function SignUp() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const signInFormSchema = yup.object().shape({   
+    name: yup.string().required('Nome obrigatório'),
+    email: yup.string().required('E-mail obrigatório').email('E-mail Inválido'),
+    telefone: yup.string().required('Digite seu telefone'),
+    password: yup.string().required('Senha obrigatória').min(6, 'No mínimo 6 caracteres'),   
+    password_confirm: yup.string()
+    .required('Confirme a senha.')
+    .oneOf([yup.ref('password')], 'A confirmação da senha não confere')
+  });  
+
+  const {register, handleSubmit, formState} = useForm<FormDataProps>({
+    resolver: yupResolver(signInFormSchema)
+  });
+
+  const {errors} = formState
+
   function handleUserPhotoSelected(){
     
   }
 
-  async function handleSignUp({name, email, telefone, password }: FormDataProps) {
+  async function handleSignUp({ name, email, telefone, password, password_confirm}: FormDataProps) {
     try {
       setIsLoading(true)
+
+      const dataSignUp = {
+        name: name,
+        email: email,
+        telefone: telefone,
+        password: password,
+        password_confirm: password_confirm,
+      }
+
+      console.log(dataSignUp)
       
-      
-      
-      toast.success('Seu login foi realizado com sucesso!', {
+      toast.success('Sua conta foi criada com sucesso! Volte para a tela de login e aproveite!', {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -70,97 +96,102 @@ export default function SignUp() {
         borderRadius={8}
       >  
         <Flex flexDir="column" mt={10} justifyContent='center' alignItems='center'>
-          {/* <LogoSvg/> */}
+          <Box w="50px" h="50px" bg="gray.300" mb={3}>
+            {/* <Logo/> */}
+          </Box>
           <Text fontSize="20"color="gray.700" fontWeight="bold" textAlign="center">Boas vindas!</Text>
           <Box w='50%' justifyContent='center' alignItems='center'>
             <Text fontSize="12" color="gray.700" textAlign="center">
               Crie sua conta e use o espaço para poder comprar itens variados e vender seus produtos
             </Text>
-          </Box>
-          
+          </Box>          
         </Flex>
 
-        <VStack px={20} spacing={3}>
+        <VStack px={20} spacing={3} mb={20}>
+          <Stack w={'100%'}>
+            <FormControl>
+              <Input
+                placeholder='Nome'
+                name='name'
+                type={'text'}
+                error={errors.name}
+                register={register}
+                options={{
+                  required: 'É necessário informar um nome.',
+                }}
+              />
+            </FormControl>
+          </Stack>
 
-          <Box 
-            borderRadius="full" 
-            width="100px" 
-            height="100px" 
-            bg="gray.300" 
-            borderColor='blue.500'
-            borderWidth={3}
-          >
+          <Stack w={'100%'}>
+            <FormControl>
+              <Input
+                placeholder='Email'
+                name='email'
+                type={'email'}
+                error={errors.email}
+                register={register}
+                options={{
+                  required: 'É necessário informar um email.',
+                }}
+              />
+            </FormControl>
+          </Stack>
 
-          </Box>
+          <Stack w={'100%'}>
+            <FormControl>
+              <Input
+                placeholder='Telefone'
+                name='telefone'
+                type={'text'}
+                error={errors.telefone}
+                register={register}
+                options={{
+                  required: 'É necessário informar um número de telefone.',
+                }}
+              />
+            </FormControl>
+          </Stack>
 
-          <Flex
-            position="absolute"
-            bottom={0}
-            right={-20}
-            bg="blue.500"
-            rounded="full"
-            // p={2}
-            color="white"
-          >
-            <IconButton
-              // icon={<EditIcon />}
-              onClick={handleUserPhotoSelected}
-              colorScheme="blue"
-              variant="unstyled"
-              aria-label="Editar foto do usuário"
-            />
-          </Flex>
+          <Stack w={'100%'}>
+            <InputGroup size={['md']}>
+              <Input
+                placeholder='Senha'
+                name='password'
+                error={errors?.password}
+                register={register}
+                isPassword
+                options={{
+                  required: 'É necessário informar uma senha.'
+                }}
+              />
+            </InputGroup>
+          </Stack>
 
-          <Input 
-            name='name' 
-            placeholder='Nome'
-            fontSize="sm"
-            type='text' 
-          />                   
-      
-          <Input                
-            name='email' 
-            placeholder='E-mail'
-            fontSize="sm"
-            type='email'
+          <Stack w={'100%'}>
+            <InputGroup size={['md']}>
+              <Input
+                placeholder='Confirme a senha'
+                name='password_confirm'
+                error={errors?.password_confirm}
+                register={register}
+                isPassword
+                options={{
+                  required: 'É necessário confirmar a senha.'
+                }}
+              />
+            </InputGroup>
+          </Stack>
+
+          <ButtonDefault
+            title="Criar conta" 
+            size="total"   
+            variant="base1"  
+            onClick={handleSubmit(handleSignUp)}  
+            // isLoading={isLoading}
           />
-
-          <Input 
-            name='phone' 
-            placeholder='Telefone'
-            fontSize="sm"
-            type='number'  
-          /> 
-
-          <Input 
-            name='password' 
-            placeholder='Senha'
-            fontSize="sm"
-            type='password'
-          /> 
-
-          <Input 
-            name='password' 
-            placeholder='Confirmar senha'
-            fontSize="sm"
-            type='password'
-          />  
-
-          <Button 
-            type='submit' 
-            // mb={10}
-            bg="blue.500"
-            fontSize="14"
-            color='gray.100'
-            _hover={{bg:'blue.700'}}
-            w='100%'
-            h={12}
-            // rightIcon={<Icon as={RiEyeLine} fontSize="35"/>} 
-            // isLoading={formState.isSubmitting}
-          >
-            Criar conta
-          </Button> 
-        </VStack>   
+   
+        </VStack>
 
         <VStack px={20} spacing={3} pt={20}> 
           <Text fontSize="14" color="gray.700" textAlign='center'>Já tem uma conta?</Text>
@@ -180,6 +211,7 @@ export default function SignUp() {
             </Button>            
           {/* </Link>         */}
         </VStack> 
+        <ToastContainer/>  
       </Stack>                    
     </Flex>
   )
