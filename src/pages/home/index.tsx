@@ -7,7 +7,8 @@ import { Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Bu
 // import { NewSearchBar } from "../../components/NewSearchBar/index";
 import React from "react";
 // import { Input } from "../../components/Form/Input";
-import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line } from 'react-icons/ri'
+import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
+import {BsTag, BsArrowRight, BsPlusCircle } from 'react-icons/bs'
 import Link from 'next/link'
 import { Header } from "../../components/Header/Index";
 import { SideBar } from "../../components/Sidebar";
@@ -26,7 +27,34 @@ export default function Home() {
         <SideBar /> 
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'> 
           <Flex direction="column" >
-            <Text color="gray.500" fontSize="md">Seus produtos anunciados para venda</Text>
+
+            <HStack 
+              justifyContent="space-between" 
+              alignItems="center"   
+              spacing={5}                                   
+            >
+              <Heading size="lg" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
+
+              <Button bg="gray.700" _hover={"blue.500"}>
+                <HStack 
+                  justifyContent="space-between" 
+                  alignItems="center"                     
+                >
+                  <BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>
+                  <Text 
+                    color="gray.200" 
+                    fontFamily={'heading'} 
+                    fontWeight="bold" 
+                    fontSize="sm"
+                  >
+                    Criar anúncio 
+                  </Text>
+                  
+                </HStack>   
+              </Button>   
+            </HStack>
+            <Divider my="2" borderColor="blue.500" ></Divider>
+
             <Box
               bg="blue.100" 
               mt={5}          
@@ -38,42 +66,39 @@ export default function Home() {
                 <HStack 
                   justifyContent="space-between" 
                   alignItems="center"   
-                  // bg="red"                                             
+                  spacing={5} 
+                  pl={3}                                   
                 >
-                  <Tag color={colors.blue[700]} size={sizes[10]} />
-
-                  <VStack ml={4}>
+                  <BsTag color={colors.blue[700]} size={sizes[7]} />
+                  <VStack ml={4} justifyContent="flex-start" alignItems="left" spacing={1}>
                     <Text 
                       color="gray.600" 
                       fontFamily={'heading'} 
-                      fontSize="md" 
+                      fontSize="xl" 
                       fontWeight="bold" 
                       lineHeight={'md'}
                       textAlign="left"
                     >
                       4
-                      {/* {products.length} */}
                     </Text>  
-                    <Text color="black" fontSize="md">anúncios ativos</Text> 
+                    <Text color="gray.600" fontSize="md">Anúncios ativos</Text> 
                   </VStack>
                 </HStack>
 
-                <Button bg="blue.100">
+                <Button bg="blue.100" _hover={"blue.500"}>
                   <HStack 
                     justifyContent="space-between" 
-                    alignItems="center" 
-                    // space={1}                      
+                    alignItems="center"                 
                   >
                     <Text 
                       color="blue.500" 
                       fontFamily={'heading'} 
                       fontWeight="bold" 
                       fontSize="md"
-                      
                     >
                       Meus anúncios 
                     </Text>
-                    {/* <ArrowRight color={colors.blue[500]} size={sizes[5]}/> */}
+                    <BsArrowRight color={colors.blue[500]} size={sizes[5]}/>
                   </HStack>   
                 </Button>                                                
               </HStack>                    
@@ -88,7 +113,6 @@ export default function Home() {
                 color="gray.700"
                 variant="filled" 
                 borderColor="blue.100"
-                // borderBottom="2px solid"
                 placeholder='Digite sua pesquisa'
                 _placeholder={{color: 'gray.400'}}
                 fontSize="sm"                                                    
@@ -104,8 +128,12 @@ export default function Home() {
                 {/* {isLoading ? (
                     <Spinner size="sm" />
                 ) : ( */}
-                    <RiSearchLine color="blue.200"/>
-                    <RiSearchLine color="blue.200"/>
+                    <HStack spacing={2} pr={5} mr={6}>
+                      <RiSearchLine color={colors.blue[500]} size={sizes[5]}/>
+                      <Text>|</Text>
+                      <RiSoundModuleFill color={colors.blue[500]} size={sizes[5]}/>
+                    </HStack>
+                    
                 {/* )} */}
               </InputRightElement>
             </InputGroup>
@@ -116,10 +144,35 @@ export default function Home() {
               // minChildWidth="380px"
               width="100%"
               h='500px'
-              mb={10}
               mt={10}
-              bg="red.500"
             >
+              <Product
+                // product_images='eeeeeee'
+                name={'Carlos'}
+                price={999}
+                user={'item.user'}
+                is_active={true}
+                onPress={() => handleProductDetails(item.id)} 
+              />
+
+              <Product
+                // product_images='eeeeeee'
+                name={'Carlos'}
+                price={999}
+                user={'item.user'}
+                is_active={true}
+                onPress={() => handleProductDetails(item.id)} 
+              />
+
+              <Product
+                // product_images='eeeeeee'
+                name={'Carlos'}
+                price={999}
+                user={'item.user'}
+                is_active={true}
+                onPress={() => handleProductDetails(item.id)} 
+              />
+
               <Product
                 // product_images='eeeeeee'
                 name={'Carlos'}
