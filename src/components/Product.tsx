@@ -2,6 +2,8 @@ import { Text, HStack, VStack, Image, Avatar, Box, Button} from '@chakra-ui/reac
 import { useState } from 'react';
 
 import BackgroundImg from '@assets/produto_1.png';
+import produto_1 from '../assets/produto_1.png';
+
 import { Status } from './Status';
 import { ProductDTO } from '../dtos/ProductDTO'
 // import { baseURL } from "@services/api"
@@ -73,22 +75,58 @@ export function Product({onPress, product_images, is_new, is_active, user, name,
                 
         // </VStack> 
 
-        <Box bg='white' w="100%" h="50%">
-            <Box bg='blue' w="100%" h="70%">
+        <Box bg='red' w="100%" h="50%" borderRadius={10}>
+            {/* <VStack bg='blue' w="100%" h="100%" >
+                <Image
+                    h={'200px'}
+                    w={'full'}
+                    src={
+                    'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+                    }
+                    objectFit={'cover'}
+                    borderRadius={10}
+                />
                 <HStack 
                     justifyContent="space-between" 
                     w="100%"
                     bg='transparent'
-                    // bgColor="transparent"  
+                    bgColor="transparent"  
                     padding={2}
-                    // top={-120}
+                    top={-120}
                 >                                               
                     <Avatar h={6} w={6} borderRadius="full" bg="gray.100" 
                         // source={{ uri: baseURL() + '/images/'+ user.avatar }}
                     />                    
                     <Status name={is_new} />
                 </HStack>  
-            </Box>
+            </VStack> */}
+            <VStack>
+                <Box position="relative" w="100%" h="100%">
+                    <Image
+                        h={'200px'}
+                        w={'full'}
+                        src={
+                            'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+                        }
+                        objectFit={'cover'}
+                        borderRadius={10}
+                    />
+                    <HStack
+                        justifyContent="space-between"
+                        w="100%"
+                        bg="transparent"
+                        bgColor="transparent"
+                        padding={2}
+                        position="absolute"
+                        top={0}
+                        zIndex={1}
+                    >
+                        <Avatar h={6} w={6} borderRadius="full" bg="gray.100" />
+                        <Status name={is_new} />
+                    </HStack>
+                </Box>
+            </VStack>
+
             <Text mt={2} fontSize='sm' color='gray.500' textAlign='left'>Tenis Vermelho da praia</Text> 
 
             <HStack 
