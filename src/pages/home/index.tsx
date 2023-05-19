@@ -1,11 +1,11 @@
 import { Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Button, 
-  InputGroup, InputRightElement, Input, useDisclosure,
+  InputGroup, InputRightElement, Input, useDisclosure, Switch, 
   AlertDialog, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, useTheme,
-  AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox, Stack, Tag} from "@chakra-ui/react";
+  AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox} from "@chakra-ui/react";
 // import { Header } from "../../components/Header/Index";
 // import { SideBar } from "../../components/Sidebar/index";
 // import { NewSearchBar } from "../../components/NewSearchBar/index";
-import React from "react";
+import React, { useState } from "react";
 // import { Input } from "../../components/Form/Input";
 import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
 import {BsTag, BsArrowRight, BsPlusCircle } from 'react-icons/bs'
@@ -17,6 +17,9 @@ import { Product } from "../../components/Product";
 export default function Home() {
 
   const { colors, sizes } = useTheme();
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const cancelRef = React.useRef()
+  const [selectedButton, setSelectedButton] = useState("ativado");
   
   return (
 
@@ -35,7 +38,7 @@ export default function Home() {
             >
               <Heading size="lg" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
 
-              <Button bg="gray.700" _hover={"blue.500"}>
+              <Button bg="blue.500">
                 <HStack 
                   justifyContent="space-between" 
                   alignItems="center"                     
@@ -85,7 +88,7 @@ export default function Home() {
                   </VStack>
                 </HStack>
 
-                <Button bg="blue.100" _hover={"blue.500"}>
+                <Button bg="blue.100">
                   <HStack 
                     justifyContent="space-between" 
                     alignItems="center"                 
@@ -131,7 +134,7 @@ export default function Home() {
                     <HStack spacing={2} pr={5} mr={6}>
                       <RiSearchLine color={colors.blue[500]} size={sizes[5]}/>
                       <Text>|</Text>
-                      <RiSoundModuleFill color={colors.blue[500]} size={sizes[5]}/>
+                      <RiSoundModuleFill color={colors.blue[500]} size={sizes[5]} onClick={onOpen}/>
                     </HStack>
                     
                 {/* )} */}
@@ -152,7 +155,7 @@ export default function Home() {
                 price={999}
                 user={'item.user'}
                 is_active={true}
-                onPress={() => handleProductDetails(item.id)} 
+                // onPress={() => handleProductDetails(item.id)} 
               />
 
               <Product
@@ -161,7 +164,7 @@ export default function Home() {
                 price={999}
                 user={'item.user'}
                 is_active={true}
-                onPress={() => handleProductDetails(item.id)} 
+                // onPress={() => handleProductDetails(item.id)} 
               />
 
               <Product
@@ -170,7 +173,7 @@ export default function Home() {
                 price={999}
                 user={'item.user'}
                 is_active={true}
-                onPress={() => handleProductDetails(item.id)} 
+                // onPress={() => handleProductDetails(item.id)} 
               />
 
               <Product
@@ -179,10 +182,115 @@ export default function Home() {
                 price={999}
                 user={'item.user'}
                 is_active={true}
-                onPress={() => handleProductDetails(item.id)} 
+                // onPress={() => handleProductDetails(item.id)} 
               />
 
             </SimpleGrid>
+
+            <AlertDialog
+              motionPreset='slideInBottom'
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}
+              isOpen={isOpen}
+              isCentered                
+            >
+              <AlertDialogOverlay />
+
+              <AlertDialogContent>
+                <AlertDialogHeader color="gray.500">Filtrar anúncios</AlertDialogHeader>                            
+                <AlertDialogCloseButton color="gray.700"/>
+
+                <AlertDialogBody color="gray.500" fontWeight="bold">
+                  <Text fontFamily='heading' fontSize='sm' color='gray.600' mb={3}>
+                    Condição
+                  </Text>
+
+                  <HStack mb={5}>
+                    <Button
+                      bg="gray.200" 
+                      color={selectedButton === "ativado" ? "blue.500" : "gray.400"}
+                      border={selectedButton === "ativado" ? "2px solid" : "0px solid"} 
+                      _hover={{ backgroundColor: "gray.300" }}                                              
+                      fontSize="sm" 
+                      justifyContent="center"
+                      alignItems="center"
+                      borderRadius={30}
+                      // onClick={() => handleFilterEnabled()} 
+                    >
+                      HABILITADOS
+                    </Button> 
+
+                    <Button
+                      bg="gray.200" 
+                      color={selectedButton === "desativado" ? "blue.500" : "gray.400"}
+                      border={selectedButton === "desativado" ? "2px solid" : "0px solid"}  
+                      _hover={{ backgroundColor: "gray.300" }}                                            
+                      fontSize="sm" 
+                      justifyContent="center"
+                      alignItems="center"
+                      borderRadius={30}
+                      // onClick={() => handleFilterDisabled()} 
+                    >
+                      NÃO HABILITADOS
+                    </Button> 
+                  </HStack>    
+
+                  <Text fontFamily='heading' fontSize='sm' color='gray.600' mb={1}>
+                    Aceita troca?
+                  </Text>
+
+                  <Switch
+                    // isChecked={isBannerVisible}
+                    // onChange={handleSwitchChange}
+                    size="lg"
+                    colorScheme="green"
+                    id='email-alerts'
+                  />
+
+                  <Text fontFamily='heading' fontSize='sm' color='gray.600' mb={3} mt={5}>
+                    Métodos de Pagamentos Aceitos:
+                  </Text>
+                
+                  <VStack
+                    // onChange={setPaymentMethods} 
+                    // value={paymentMethods} 
+                    // accessibilityLabel="choose numbers"
+                    alignItems="left"
+                    justify="flex-start"
+                  >
+                    <Checkbox value='boleto' mb={1}>Boleto</Checkbox>
+                    <Checkbox value='pix' mb={1}>Pix</Checkbox>
+                    <Checkbox value='cash' mb={1}>Dinheiro</Checkbox>
+                    <Checkbox value='card' mb={1}>Cartão Crédito</Checkbox>
+                    <Checkbox value='deposit' mb={1}>Depósito Bancário</Checkbox>
+                  </VStack> 
+                </AlertDialogBody>
+
+                <AlertDialogFooter>
+                  <HStack justifyContent='space-between' w='100%'>
+                    <Button 
+                      bg='gray.200' 
+                      // ref={cancelRef} 
+                      onClick={onClose} 
+                      w="48%"
+                    >
+                      Resetar Filtros
+                    </Button>
+
+                    <Button 
+                      bg='gray.700' 
+                      color="gray.200" 
+                      // ref={cancelRef} 
+                      onClick={onClose} 
+                      w="48%"
+                    >
+                      Aplicar Filtros
+                    </Button>
+                  </HStack>
+                </AlertDialogFooter>
+
+              </AlertDialogContent>
+            </AlertDialog> 
           </Flex>
         </SimpleGrid>
       </Flex>
