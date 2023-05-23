@@ -32,7 +32,7 @@ export function Profile({showProfileData = true}:ProfileProps){
                 src="https://github.com/carloshenriquepvh@hotmail.com.png">
             </Avatar>
 
-            <Button bg="gray.100" onClick={onOpen}>
+            <Button bg="gray.100" color="blue.500" onClick={onOpen}>
                 Sair
             </Button>
 

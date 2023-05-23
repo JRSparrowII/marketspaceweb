@@ -37,7 +37,7 @@ export default function Preview() {
           <SideBar /> 
           <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'> 
             <Flex direction="column" mb={20}>
-                <Heading size="lg" fontWeight="normal" color="blue.500" >Pré Visualização do anúncio</Heading>
+                <Heading size="md" fontWeight="normal" color="blue.500" >Pré Visualização do anúncio</Heading>
                 <Divider my="2" borderColor="blue.500" ></Divider>
 
                 <SimpleGrid 
@@ -100,11 +100,11 @@ export default function Preview() {
                     <Text color="blue.700" fontWeight="bold">R$ 102,58</Text>
                 </HStack>
 
-                <Text color="blue.700" mt={5}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere doloribus voluptatem, atque neque officiis libero placeat est molestiae, illum incidunt excepturi blanditiis! Sed, eveniet impedit eum veritatis ipsum accusantium voluptate.</Text>
+                <Text color="blue.700" fontSize="sm" mt={5}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere doloribus voluptatem, atque neque officiis libero placeat est molestiae, illum incidunt excepturi blanditiis! Sed, eveniet impedit eum veritatis ipsum accusantium voluptate.</Text>
 
-                <Text color="blue.700" mt={5}>Aceita troca? Sim!</Text>
+                <Text color="blue.700" fontSize="sm" mt={5}>Aceita troca? Sim!</Text>
 
-                <Text color="blue.700" fontWeight="bold" mt={5}>Meios de pagamento</Text>
+                <Text color="blue.700" fontSize="sm" fontWeight="bold" mt={5}>Meios de pagamento</Text>
 
                 <VStack
                     // onChange={setPaymentMethods} 
@@ -113,12 +113,13 @@ export default function Preview() {
                     alignItems="left"
                     justify="flex-start"
                     mt={3}
+                    fontSize="sm"
                 >
-                    <Checkbox value='boleto' mb={1}>Boleto</Checkbox>
-                    <Checkbox value='pix' mb={1}>Pix</Checkbox>
-                    <Checkbox value='cash' mb={1}>Dinheiro</Checkbox>
-                    <Checkbox value='card' mb={1}>Cartão Crédito</Checkbox>
-                    <Checkbox value='deposit' mb={1}>Depósito Bancário</Checkbox>
+                    <Checkbox value='boleto' mb={1} fontSize="sm">Boleto</Checkbox>
+                    <Checkbox value='pix' mb={1} fontSize="sm">Pix</Checkbox>
+                    <Checkbox value='cash' mb={1} fontSize="sm">Dinheiro</Checkbox>
+                    <Checkbox value='card' mb={1} fontSize="sm">Cartão Crédito</Checkbox>
+                    <Checkbox value='deposit' mb={1} fontSize="sm">Depósito Bancário</Checkbox>
                 </VStack> 
 
                 <HStack 
@@ -127,8 +128,8 @@ export default function Preview() {
                     spacing={2}   
                     mt={5}                                
                 > 
-                    <Button bg='blue.500' color="blue.100">Voltar e Editar</Button>
-                    <Button bg='blue.500' color="blue.100">Publicar</Button>
+                    <Button fontSize="sm" bg='blue.500' color="blue.100">Voltar e Editar</Button>
+                    <Button fontSize="sm" bg='blue.500' color="blue.100">Publicar</Button>
                 </HStack>
 
               
