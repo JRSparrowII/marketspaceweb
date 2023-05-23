@@ -36,7 +36,7 @@ export default function Home() {
               alignItems="center"   
               spacing={5}                                   
             >
-              <Heading size="lg" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
+              <Heading size="md" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
 
               <Button bg="blue.500">
                 <HStack 
@@ -84,7 +84,7 @@ export default function Home() {
                     >
                       4
                     </Text>  
-                    <Text color="gray.600" fontSize="md">Anúncios ativos</Text> 
+                    <Text color="gray.600" fontSize="sm">Anúncios ativos</Text> 
                   </VStack>
                 </HStack>
 
@@ -97,7 +97,7 @@ export default function Home() {
                       color="blue.500" 
                       fontFamily={'heading'} 
                       fontWeight="bold" 
-                      fontSize="md"
+                      fontSize="sm"
                     >
                       Meus anúncios 
                     </Text>
@@ -107,7 +107,7 @@ export default function Home() {
               </HStack>                    
             </Box>
 
-            <Text color="gray.500" mt={8} mb={4}>
+            <Text color="gray.500" fontSize="sm" mt={8} mb={4}>
                 Compre produtos variados
             </Text>
 

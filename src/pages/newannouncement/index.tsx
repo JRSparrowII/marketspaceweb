@@ -92,7 +92,7 @@ export default function NewAnnouncement() {
                             alignItems="center"   
                             spacing={5}                                   
                         >
-                            <Heading size="lg" fontWeight="normal" color="blue.500">Crie um novo anúncio</Heading>
+                            <Heading size="md" fontWeight="normal" color="blue.500">Crie um novo anúncio</Heading>
                         </HStack>
                         <Divider my="2" borderColor="blue.500" ></Divider>
 

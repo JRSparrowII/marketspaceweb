@@ -39,7 +39,7 @@ export default function MyAnnouncement() {
                             alignItems="center"   
                             spacing={5}                                   
                         >
-                            <Heading size="lg" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
+                            <Heading size="md" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
                             <Button bg="blue.500">
                                 <HStack 
                                 justifyContent="space-between" 
