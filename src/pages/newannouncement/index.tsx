@@ -1,67 +1,73 @@
-import { Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Button, 
-    InputGroup, InputRightElement, Input, useDisclosure, Switch, Image,
-    AlertDialog, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, useTheme,
-    AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox, Stack, Tag} from "@chakra-ui/react"
-;
-// import { Header } from "../../components/Header/Index";
-// import { SideBar } from "../../components/Sidebar/index";
-// import { NewSearchBar } from "../../components/NewSearchBar/index";
 import React, { useState } from "react";
-// import { Input } from "../../components/Form/Input";
-import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
+import { Box, Flex, Heading, Divider, VStack, SimpleGrid, HStack, Text, Button, Radio, RadioGroup,
+   Switch, Image, useTheme, Checkbox, CheckboxGroup, Stack, FormControl
+} from "@chakra-ui/react";
+
 import { RxPlus } from 'react-icons/rx'
-import Link from 'next/link'
+import { AdsDTO } from "../../dtos/AdsDTO";
+
 import { Header } from "../../components/Header/Index";
 import { SideBar } from "../../components/Sidebar";
-import { Product } from "../../components/Product";
-import { Radio, RadioGroup } from "@chakra-ui/react";
+import { Input } from "../../components/Input";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import * as yup from 'yup'
+import { SubmitHandler, useForm } from "react-hook-form";
+import {yupResolver } from "@hookform/resolvers/yup";
+
+import Link from 'next/link'
   
 export default function NewAnnouncement() {
 
     const { colors, sizes } = useTheme();
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const cancelRef = React.useRef()
-    const [selectedButton, setSelectedButton] = useState("ativado");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const RadioStatusProduct = () => {
-        const [statusProduto, setStatusProduto] = useState("");
+    const newAnnouncementFormSchema = yup.object().shape({   
+        name: yup.string().required('Nome obrigatório'),
+        price: yup.string().required('Preço é obrigatório'),
+        description: yup.string().required('Descreva seu produto'),
+    }); 
+    const {register, handleSubmit, formState} = useForm<AdsDTO>({
+        resolver: yupResolver(newAnnouncementFormSchema)
+    });
+    
+    const {errors} = formState
+
+    const [statusProduto, setStatusProduto] = useState<string | undefined>(undefined);
+    const [switchValue, setSwitchValue] = useState(false);
+    const [paymentMethods, setPaymentMethods] = useState<string[]>([])
+
+    function RadioStatusProduct(){
         return (
             <RadioGroup
                 name="radioGroupStatusProduto"
                 value={statusProduto}
-                onChange={(nextValue) => {
-                    setStatusProduto(nextValue);
-                }}
-                
+                onChange={(nextValue) => {setStatusProduto(nextValue)}}              
             >
                 <HStack
                     justifyContent="space-between"
                     alignItems="center"
                     w="30%"
-                    // bg="red"
                     mt={3}
+                    color="gray.600" 
+                    fontSize='sm'
                 >
-                    <Radio value="new" my={1} color="gray.900" fontSize='sm'>
+                    <Radio size='sm' value="new" my={1}>
                         Produto novo
                     </Radio>
 
-                    <Radio value="used" my={1} fontSize='sm'>
+                    <Radio size='sm' value="used" my={1}>
                         Produto usado
                     </Radio>
-                </HStack>
-                
+                </HStack>       
             </RadioGroup>
         );
     };
 
-    const Switches = () => {
-        const [switchValue, setSwitchValue] = useState(false);
-
-        const toggleSwitch = () => {
-            setSwitchValue(!switchValue);
-        };
-
+    function Switches(){
+        const toggleSwitch = () => { setSwitchValue(!switchValue)};
         return (
             <VStack alignItems="flex-start">
                 <Switch
@@ -76,7 +82,98 @@ export default function NewAnnouncement() {
         );
     };
 
+    function handleLoading() {
+        setIsLoading(true);
 
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+    }
+
+    function getConverteStatusProdutoBoolean(status : string): boolean {
+        if (statusProduto == "new") {
+            return true;
+        } else {
+            return false;
+        }
+    } 
+
+    async function handleNewAd({ name, price, description }: AdsDTO) {
+        try {  
+
+            if(paymentMethods.length === 0) {
+                toast.warning('Atenção! Por favor, escolha um método de pagamento.', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });        
+                return
+            }
+
+            if ( !statusProduto ) {
+                toast.warning('Atenção! Por favor, status para seu produto.', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });        
+                return
+            }
+
+            // if ( !images ) {
+            //     toast.warning('Atenção! Por favor, escolha uma imagem.', {
+            //         position: "top-right",
+            //         autoClose: 5000,
+            //         hideProgressBar: false,
+            //         closeOnClick: true,
+            //         pauseOnHover: true,
+            //         draggable: true,
+            //         progress: undefined,
+            //         theme: "colored",
+            //     });        
+            //     return
+            // }   
+
+            handleLoading()
+
+            const data = {
+                name: name,
+                description: description,
+                is_new:  getConverteStatusProdutoBoolean(statusProduto),
+                price: price,
+                accept_trade:  switchValue,
+                payment_methods: paymentMethods,
+                // images: images
+            }
+            console.log( 'TESTANDO AS 18:45 =>', data)
+
+            // await storageAdsSave(data);
+            // handleOpenPreview();               
+                  
+        } catch (error) {
+            setIsLoading(false);
+        
+            toast.error('Ocorreu um erro, tente mais tarde!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }        
+    }
     
     return (
 
@@ -167,48 +264,54 @@ export default function NewAnnouncement() {
 
                         <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Sobre o produto</Text>
 
-                        <Input 
-                            color="gray.700"
-                            variant="filled" 
-                            borderColor="blue.100"
-                            placeholder='Título do seu anúncio'
-                            _placeholder={{color: 'gray.400'}}
-                            fontSize="sm"                                                    
-                            type="text" 
-                            // value={filterNameInput} 
-                            // onChange={handleSearchByNameCompany}
-                            mt={5}
-                        />   
+                        <Stack w={'100%'} mt={5}>
+                            <FormControl>
+                                <Input
+                                    placeholder='Título do seu anúncio'
+                                    name='name'
+                                    type={'text'}
+                                    error={errors.name}
+                                    register={register}
+                                    options={{
+                                    required: 'É necessário informar um nome para o anúncio.',
+                                    }}
+                                />
+                            </FormControl>
+                        </Stack>
 
-                        <Input 
-                            color="gray.700"
-                            variant="filled" 
-                            borderColor="blue.100"
-                            placeholder='Descrição do seu anúncio'
-                            _placeholder={{color: 'gray.400'}}
-                            fontSize="sm"                                                    
-                            type="text" 
-                            mt={5}
-                            // value={filterNameInput} 
-                            // onChange={handleSearchByNameCompany}
-                        />  
+                        <Stack w={'100%'} mt={3}>
+                            <FormControl>
+                                <Input
+                                    placeholder='Descrição do seu anúncio'
+                                    name='description'
+                                    type={'text'}
+                                    error={errors.description}
+                                    register={register}
+                                    options={{
+                                    required: 'É necessário informar a descrição do anúncio.',
+                                    }}
+                                />
+                            </FormControl>
+                        </Stack>
 
                         <RadioStatusProduct/>
 
                         <Text color="gray.600" fontSize="md" mt={3} fontWeight="bold">Venda</Text>
 
-                        <Input 
-                            color="gray.700"
-                            variant="filled" 
-                            borderColor="blue.100"
-                            placeholder='Valor do produto'
-                            _placeholder={{color: 'gray.400'}}
-                            fontSize="sm"                                                    
-                            type="text" 
-                            // value={filterNameInput} 
-                            // onChange={handleSearchByNameCompany}
-                            mt={3}
-                        />   
+                        <Stack w={'100%'} mt={3}>
+                            <FormControl>
+                                <Input
+                                    placeholder='Valor do produto'
+                                    name='price'
+                                    type={'text'}
+                                    error={errors.price}
+                                    register={register}
+                                    options={{
+                                    required: 'É necessário informar um valor para o anúncio.',
+                                    }}
+                                />
+                            </FormControl>
+                        </Stack> 
 
                         <Text color="gray.600" fontSize="md" mt={3} fontWeight="bold">Aceita troca?</Text>
 
@@ -216,43 +319,46 @@ export default function NewAnnouncement() {
 
                         <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Métodos de pagamento</Text>
 
-                        <VStack
-                            // onChange={setPaymentMethods} 
-                            // value={paymentMethods} 
-                            // accessibilityLabel="choose numbers"
-                            alignItems="left"
-                            justify="flex-start"
-                            mt={5}
+                        <CheckboxGroup 
+                            colorScheme='blue' 
+                            onChange={setPaymentMethods} 
+                            value={paymentMethods} 
+                            accessibilityLabel="choose numbers"
                         >
-                            <Checkbox value='boleto' mb={1}>Boleto</Checkbox>
-                            <Checkbox value='pix' mb={1}>Pix</Checkbox>
-                            <Checkbox value='cash' mb={1}>Dinheiro</Checkbox>
-                            <Checkbox value='card' mb={1}>Cartão Crédito</Checkbox>
-                            <Checkbox value='deposit' mb={1}>Depósito Bancário</Checkbox>
-                        </VStack> 
+                            <VStack spacing={[1, 2]} direction={['column']} alignItems="left" justify="flex-start" mt={3}>
+                                <Checkbox value='boleto' color="gray.500" size='sm'>Boleto</Checkbox>
+                                <Checkbox value='pix'color="gray.500" size='sm'>Pix</Checkbox>
+                                <Checkbox value='cash' color="gray.500" size='sm'>Dinheiro</Checkbox>
+                                <Checkbox value='card' color="gray.500" size='sm'>Cartão Crédito</Checkbox>
+                                <Checkbox value='deposit' color="gray.500" size='sm'>Depósito Bancário</Checkbox>
+                            </VStack>
+                        </CheckboxGroup>
 
                         <HStack justifyContent='space-between' w='100%' mt={5} mb={10}>
                             <Button 
                                 bg='gray.200' 
                                 // ref={cancelRef} 
-                                onClick={onClose} 
+                                // onClick={onClose} 
                                 w="48%"
                             >
-                                Resetar Filtros
+                                Cancelar
                             </Button>
 
                             <Button 
                                 bg='gray.700' 
                                 color="gray.200" 
-                                // ref={cancelRef} 
-                                onClick={onClose} 
+                                isLoading={isLoading}
+                                loadingText="Aguarde..."
+                                spinnerPlacement="end"
+                                onClick={handleSubmit(handleNewAd)} 
                                 w="48%"
                             >
-                                Aplicar Filtros
+                                Avançar
                             </Button>
                         </HStack>
                     </Flex>
                 </SimpleGrid>
+                <ToastContainer/>  
             </Flex>
         </Flex>
     )

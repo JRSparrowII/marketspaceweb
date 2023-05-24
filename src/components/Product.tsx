@@ -2,6 +2,7 @@ import { Text, HStack, VStack, Image, Avatar, Box, Button} from '@chakra-ui/reac
 import { useState } from 'react';
 import { Status } from './Status';
 import { ProductDTO } from '../dtos/ProductDTO'
+import { MotionFlex, animationFlex, itemAnimation } from '../styles/animation';
 // import { baseURL } from "@services/api"
 
 // type Props = TouchableOpacityProps & {
@@ -14,6 +15,9 @@ export function Product({onPress, product_images, is_new, is_active, user, name,
     const [product, setProduct] = useState<ProductDTO>({} as ProductDTO);
 
     return(
+        <MotionFlex variants={animationFlex}>
+
+       
         <Box bg='red' w="100%" h="50%" borderRadius={10}>
             <VStack>
                 <Box position="relative" w="100%" h="100%">
@@ -58,6 +62,7 @@ export function Product({onPress, product_images, is_new, is_active, user, name,
                 </Text>                
             </HStack> 
         </Box>
+        </MotionFlex>
               
     )
 }
