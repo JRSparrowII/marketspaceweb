@@ -14,31 +14,70 @@ import { Header } from "../../components/Header/Index";
 import { SideBar } from "../../components/Sidebar";
 import { Product } from "../../components/Product";
 
+import { FiLogIn } from "react-icons/fi";
+import { MotionFlex, animationFlex, itemAnimation } from '../../styles/animation';
+
 export default function Home() {
 
   const { colors, sizes } = useTheme();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
   const [selectedButton, setSelectedButton] = useState("ativado");
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  function handleLoading() {
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }
   
   return (
 
-    <Flex direction="column" height="100vh"> 
+    <Flex direction="column" height="100vh" 
+    // variants={animationFlex}
+    // initial="hidden"
+    // animate="visible"
+    > 
       <Header/>   
       
-      <Flex width="100%" my="6" maxWidth={1250} mx="auto" px="6">
+      <MotionFlex 
+        width="100%" 
+        my="6" 
+        maxWidth={1250} 
+        mx="auto" 
+        px="6"  
+        variants={animationFlex}
+        initial="hidden"
+        animate="visible"
+      >
         <SideBar /> 
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'> 
-          <Flex direction="column" >
-
+          <MotionFlex direction="column" variants={itemAnimation}>
             <HStack 
               justifyContent="space-between" 
               alignItems="center"   
               spacing={5}                                   
             >
               <Heading size="md" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
-
-              <Button bg="blue.500">
+              
+              <Button 
+                bg="blue.500"
+                type="button"
+                onClick={handleLoading}
+                isLoading={isLoading}
+                loadingText="Aguarde..."
+                spinnerPlacement="end"
+                // name="Entrar"
+                color="gray.100"
+                // border="none"
+                _focus={{ border: "none" }}
+                _active={{ background: "blue.700" }}
+                _hover={{ background: "blue.700" }}
+                fontSize="sm"
+              >
                 <HStack 
                   justifyContent="space-between" 
                   alignItems="center"                     
@@ -54,7 +93,8 @@ export default function Home() {
                   </Text>
                   
                 </HStack>   
-              </Button>   
+              </Button> 
+
             </HStack>
             <Divider my="2" borderColor="blue.500" ></Divider>
 
@@ -291,9 +331,9 @@ export default function Home() {
 
               </AlertDialogContent>
             </AlertDialog> 
-          </Flex>
+          </MotionFlex>
         </SimpleGrid>
-      </Flex>
+      </MotionFlex>
     </Flex>
   )
 }

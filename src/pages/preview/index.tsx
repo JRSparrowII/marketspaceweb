@@ -18,6 +18,7 @@ import { SideBar } from "../../components/Sidebar";
 import { Product } from "../../components/Product";
 import { Radio, RadioGroup } from "@chakra-ui/react";
 import { BsPlusCircle } from "react-icons/bs";
+import CarouselSlider from '../../components/CarouselSlider';
 
 export default function Preview() {
 
@@ -40,7 +41,7 @@ export default function Preview() {
                 <Heading size="md" fontWeight="normal" color="blue.500" >Pré Visualização do anúncio</Heading>
                 <Divider my="2" borderColor="blue.500" ></Divider>
 
-                <SimpleGrid 
+                {/* <SimpleGrid 
                     columns={{ sm: 1, md: 1 }} 
                     spacing="4"
                     // minChildWidth="380px"
@@ -57,7 +58,15 @@ export default function Preview() {
                         is_active={true}
                         // onPress={() => handleProductDetails(item.id)} 
                     />
-                </SimpleGrid>
+                </SimpleGrid> */}
+
+                <CarouselSlider
+                    images={[
+                        'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+                        'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+                        'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+                    ]}
+                />
 
                 <HStack 
                     justifyContent="flex-start" 

@@ -82,9 +82,11 @@ function Input({ label, name, error, register, options, isPassword = false, icon
             type={show ? 'text' : 'password'}
             autoComplete={"off"}
 
-            _hover={{
-              borderColor: 'blue.500'
-            }}
+            _placeholder={{color: 'gray.400'}}
+
+            // _hover={{
+            //   borderColor: 'blue.500'
+            // }}
 
             {...register(name, options)}
             {...rest}
