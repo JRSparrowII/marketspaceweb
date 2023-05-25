@@ -21,7 +21,7 @@ import Link from 'next/link'
 import Dropzone from "../../components/Dropzone";
 import { storageAdsSave } from "../../storage/storageAds";
   
-export default function NewAnnouncement() {
+export default function EditAds() {
 
     const { colors, sizes } = useTheme();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -194,7 +194,7 @@ export default function NewAnnouncement() {
                             alignItems="center"   
                             spacing={5}                                   
                         >
-                            <Heading size="md" fontWeight="normal" color="blue.500">Crie um novo anúncio</Heading>
+                            <Heading size="md" fontWeight="normal" color="blue.500">Editar anúncio</Heading>
                         </HStack>
                         <Divider my="2" borderColor="blue.500" ></Divider>
 
