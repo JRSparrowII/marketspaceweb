@@ -8,9 +8,16 @@ import { Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Bu
 // import { Header } from "../../components/Header/Index";
 // import { SideBar } from "../../components/Sidebar/index";
 // import { NewSearchBar } from "../../components/NewSearchBar/index";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { Input } from "../../components/Form/Input";
-import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
+// import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill} from 'react-icons/ri'
+import { RiBarcodeLine, RiArrowLeftLine, RiQrCodeFill } from 'react-icons/ri';
+import { IoMdCash } from "react-icons/io";
+import { BsFillCreditCardFill, BsBank } from "react-icons/bs";
+import { IconBaseProps } from 'react-icons';
+
+import {BsTag, BsArrowRight } from 'react-icons/bs'
+
 import { RxPlus } from 'react-icons/rx'
 import Link from 'next/link'
 import { Header } from "../../components/Header/Index";
@@ -19,18 +26,137 @@ import { Product } from "../../components/Product";
 import { Radio, RadioGroup } from "@chakra-ui/react";
 import { BsPlusCircle } from "react-icons/bs";
 import CarouselSlider from '../../components/CarouselSlider';
+import { AdsDTO } from '../../dtos/AdsDTO';
+import { storageAdsGet } from '../../storage/storageAds';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Preview() {
 
-  const {query} = useRouter()
+    const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { colors, sizes } = useTheme();
 
-  const { colors, sizes } = useTheme();
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = React.useRef()
-  const [selectedButton, setSelectedButton] = useState("ativado");
+    const methodIcons: { [key: string]: React.ComponentType<IconBaseProps> } = {
+        boleto: RiBarcodeLine,
+        pix: RiQrCodeFill,
+        cash: IoMdCash,
+        card: BsFillCreditCardFill,
+        deposit: BsBank
+    };
+
+    function handleLoading() {
+        setIsLoading(true);
+
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+    }
+
+    async function handleCreateNewAd() {           
+        try {
+            // setIsLoading(true);
+            const data = {
+                name: ads?.name,
+                description: ads?.description,
+                is_new: ads?.is_new,
+                price: ads?.price,
+                accept_trade: ads?.accept_trade,
+                payment_methods: ads?.payment_methods
+            }
+
+            // const response_product = await api.post('/products', data);  
+            handleLoading()
+
+            toast.success('Seu anúncio foi publicado com sucesso!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+                        
+            // if (response_product.data.id) {   
+
+            //     let formData = new FormData(); 
+
+            //     ads?.images.map(( item ) => {
+            //         formData.append("images", {
+            //             uri: item,
+            //             name: "image.jpg",
+            //             type: "image/jpg",
+            //         });
+            //     })
+
+            //     formData.append('product_id', response_product.data.id)
+            
+                
+            //     await api.post('/products/images', formData, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data',
+            //         },
+            //         transformRequest: (data, headers) => {                        
+            //             return formData;
+            //         },
+            //     });
+
+            //     const title = 'Seu anúncio foi salvo com sucesso!';
+            //     toast.show({    
+            //         title,
+            //         placement: 'top',
+            //         bgColor: 'green.500'
+            //     })   
+
+            //     // handleGoHome();
+
+            // } else {
+            //     throw new Error();
+            // }         
+
+        } catch(error) {
+
+            // const isAppError = error instanceof AppError;
+            // const title = isAppError ? error.message : 
+            // 'Não foi possível enviar os dados. Tente novamente mais tarde';
+
+            // setIsLoading(false);
+        
+            // toast.show({    
+            //     title,
+            //     placement: 'top',
+            //     bgColor: 'red.500'
+            // })
+        }
+    }
+
+    async function fetchAds() {
+       
+        try {
+            const adLoad = await storageAdsGet();
+            setAds(adLoad);
+        
+        }   catch (error) {
+
+            // const isAppError = error instanceof AppError;
+            // const title = isAppError ? error.message : 'Não foi possível carregar os produtos';
+        
+            // toast.show({
+            //     title,
+            //     placement: 'top',
+            //     bgColor: 'red.500'
+            // })
+        }
+    }
+
+    useEffect(() => {
+        fetchAds()
+    }, []);  
 
   return (
-    // <h1>E la vamos nos Product 16337: {JSON.stringify(query)}</h1>
     <Flex direction="column" height="100vh"> 
         <Header/>   
         
@@ -41,26 +167,10 @@ export default function Preview() {
                 <Heading size="md" fontWeight="normal" color="blue.500" >Pré Visualização do anúncio</Heading>
                 <Divider my="2" borderColor="blue.500" ></Divider>
 
-                {/* <SimpleGrid 
-                    columns={{ sm: 1, md: 1 }} 
-                    spacing="4"
-                    // minChildWidth="380px"
-                    width="100%"
-                    // h='700px'
-                    mt={3} 
-                    bg='blue'
-                >
-                    <Product
-                        // product_images='eeeeeee'
-                        name={'Carlos'}
-                        price={999}
-                        user={'item.user'}
-                        is_active={true}
-                        // onPress={() => handleProductDetails(item.id)} 
-                    />
-                </SimpleGrid> */}
+                <Text color="gray.500" fontSize="md" mt={5} mb={5}>É assim que seu anúncio irá aparecer</Text>
 
                 <CarouselSlider
+                    // images={[ads?.images]}
                     images={[
                         'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
                         'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
@@ -71,32 +181,30 @@ export default function Preview() {
                 <HStack 
                     justifyContent="flex-start" 
                     alignItems="center"   
-                    spacing={2}   
-                    mt={5}                                
+                    spacing={2}                              
                 >
-                    <Avatar     //IMAGEM DO USUARIO
-                    size="sm" 
-                    name='Carlos Henrique'
-                    bg="blue.500" 
-                    src="https://github.com/carloshenriquepvh@hotmail.com.png">
+                    <Avatar
+                        size="sm" 
+                        name='Carlos Henrique'
+                        bg="blue.500" 
+                        src="https://github.com/carloshenriquepvh@hotmail.com.png">
                     </Avatar>
-                    <Text color="blue.700" fontWeight="bold">Carlos Henrique</Text>
+                    <Text color="gray.500" fontWeight="bold">Carlos Henrique</Text>
                 </HStack>
 
                 <Button
                     bg="gray.200" 
-                    color={selectedButton === "ativado" ? "blue.500" : "gray.400"}
-                    // border={selectedButton === "ativado" ? "2px solid" : "0px solid"} 
-                    _hover={{ backgroundColor: "gray.300" }}                                              
+                    color={"gray.500"}
+                    _hover={{ backgroundColor: "gray.200" }}                                              
                     fontSize="sm" 
                     justifyContent="center"
                     alignItems="center"
                     borderRadius={30}
                     w="15%"
                     mt={5}
-                    // onClick={() => handleFilterEnabled()} 
+                    cursor="default"
                 >
-                    HABILITADOS
+                    {ads?.is_new ? 'Novo' : 'Usado'}
                 </Button> 
 
                 <HStack 
@@ -105,45 +213,112 @@ export default function Preview() {
                     spacing={2}   
                     mt={5}                                
                 >
-                    <Text color="blue.700" fontWeight="bold">Cachoeira</Text>
-                    <Text color="blue.700" fontWeight="bold">R$ 102,58</Text>
+                    <Text color="gray.500" fontWeight="bold">{ads?.name}</Text>
+                    <Text color="gray.500" fontWeight="bold">R$ {ads?.price}</Text>
                 </HStack>
 
-                <Text color="blue.700" fontSize="sm" mt={5}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere doloribus voluptatem, atque neque officiis libero placeat est molestiae, illum incidunt excepturi blanditiis! Sed, eveniet impedit eum veritatis ipsum accusantium voluptate.</Text>
-
-                <Text color="blue.700" fontSize="sm" mt={5}>Aceita troca? Sim!</Text>
-
-                <Text color="blue.700" fontSize="sm" fontWeight="bold" mt={5}>Meios de pagamento</Text>
-
-                <VStack
-                    // onChange={setPaymentMethods} 
-                    // value={paymentMethods} 
-                    // accessibilityLabel="choose numbers"
-                    alignItems="left"
-                    justify="flex-start"
-                    mt={3}
-                    fontSize="sm"
-                >
-                    <Checkbox value='boleto' mb={1} fontSize="sm">Boleto</Checkbox>
-                    <Checkbox value='pix' mb={1} fontSize="sm">Pix</Checkbox>
-                    <Checkbox value='cash' mb={1} fontSize="sm">Dinheiro</Checkbox>
-                    <Checkbox value='card' mb={1} fontSize="sm">Cartão Crédito</Checkbox>
-                    <Checkbox value='deposit' mb={1} fontSize="sm">Depósito Bancário</Checkbox>
-                </VStack> 
+                <Text color="gray.500" fontSize="sm" mt={5}>{ads?.description}</Text>
 
                 <HStack 
-                    justifyContent="space-between" 
+                    justifyContent="flex-start" 
                     alignItems="center"   
                     spacing={2}   
                     mt={5}                                
-                > 
-                    <Button fontSize="sm" bg='blue.500' color="blue.100">Voltar e Editar</Button>
-                    <Button fontSize="sm" bg='blue.500' color="blue.100">Publicar</Button>
+                >
+                    <Text color="gray.500" fontWeight="bold">Aceita troca?</Text>
+                    <Text color="gray.500" fontSize="md">{ads?.accept_trade ? 'Sim' : 'Não'}</Text>
                 </HStack>
 
-              
+                <Text color="gray.500" fontSize="md" fontWeight="bold" mt={5}>Meios de pagamento</Text>
+
+                <VStack
+                    alignItems="left"
+                    justify="flex-start"
+                    mt={2}
+                    fontSize="sm"
+                >
+                    {ads?.payment_methods.map(method =>
+                        <HStack alignItems='center' key={method}>
+                            { methodIcons[method] && (
+                                <Icon as={methodIcons[method]} name={method} size={6} color='gray.600' mr={1}/>
+                            )}
+                            <Text fontFamily='body' textTransform='capitalize' fontSize='sm' color='gray.600'>
+                                {method}
+                            </Text>
+                        </HStack>
+                    )}   
+
+                </VStack>
+
+                <HStack justifyContent='space-between' w='100%' mt={5} mb={5} bg="white" h={20} px={10}>
+
+                    <Button 
+                        bg="gray.300"
+                        type="button"
+                        onClick={handleCreateNewAd}
+                        isLoading={isLoading}
+                        loadingText="Aguarde..."
+                        spinnerPlacement="end"
+                        w="48%"
+                        // name="Entrar"
+                        color="gray.800"
+                        // border="none"
+                        _focus={{ border: "none" }}
+                        _active={{ background: "blue.700" }}
+                        _hover={{ background: "blue.700" }}
+                        fontSize="sm"
+                    >
+                        <HStack 
+                            justifyContent="space-between" 
+                            alignItems="center"                     
+                        >
+                            <RiArrowLeftLine color={colors.gray[600]} size={sizes[5]}/>
+                            <Text 
+                                color="gray.600" 
+                                fontFamily={'heading'} 
+                                fontWeight="bold" 
+                                fontSize="sm"
+                            >
+                                Voltar e Editar 
+                            </Text>                        
+                        </HStack>   
+                    </Button>
+
+                    <Button 
+                        bg="blue.500"
+                        type="button"
+                        onClick={handleCreateNewAd}
+                        isLoading={isLoading}
+                        loadingText="Aguarde..."
+                        spinnerPlacement="end"
+                        w="48%"
+                        // name="Entrar"
+                        color="gray.100"
+                        // border="none"
+                        _focus={{ border: "none" }}
+                        _active={{ background: "blue.700" }}
+                        _hover={{ background: "blue.700" }}
+                        fontSize="sm"
+                    >
+                        <HStack 
+                            justifyContent="space-between" 
+                            alignItems="center"                     
+                        >
+                            <BsTag color={colors.gray[200]} size={sizes[4]}/>
+                            <Text 
+                                color="gray.200" 
+                                fontFamily={'heading'} 
+                                fontWeight="bold" 
+                                fontSize="sm"
+                            >
+                                Publicar 
+                            </Text>                        
+                        </HStack>   
+                    </Button> 
+                </HStack>              
             </Flex>
           </SimpleGrid>
+          <ToastContainer/> 
         </Flex>
     </Flex>
   )

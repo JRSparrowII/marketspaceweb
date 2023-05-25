@@ -16,16 +16,16 @@ export function ButtonDefault({ title, icon, variant = 'default', size = 'half',
         h={size === "half" ? '10' : '12'}           
         
         bg={variant === 'default' ? 'gray.300' :  
-            variant === 'base1' ? 'blue.500' : 'gray.700'
+          variant === 'base1' ? 'blue.500' : 'gray.700'
         }    
 
         borderColor="blue.500"
         rounded="md"
 
         _hover={{
-            bg: variant === 'default' ? 'gray.400' :  
-            variant === 'base1' ? 'blue.700' : 'gray.500'
-            }
+          bg: variant === 'default' ? 'gray.400' :  
+          variant === 'base1' ? 'blue.700' : 'gray.500'
+          }
         }
         
         {...rest}

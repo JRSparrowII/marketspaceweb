@@ -8,7 +8,7 @@ import { Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Bu
 // import { Header } from "../../components/Header/Index";
 // import { SideBar } from "../../components/Sidebar/index";
 // import { NewSearchBar } from "../../components/NewSearchBar/index";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { Input } from "../../components/Form/Input";
 import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
 import { RxPlus } from 'react-icons/rx'
@@ -19,6 +19,16 @@ import { Product } from "../../components/Product";
 import { Radio, RadioGroup } from "@chakra-ui/react";
 import { BsPlusCircle } from "react-icons/bs";
 import CarouselSlider from '../../components/CarouselSlider';
+import { AdsDTO } from '../../dtos/AdsDTO';
+
+import { RiBarcodeLine, RiArrowLeftLine, RiQrCodeFill } from 'react-icons/ri';
+import { IoMdCash } from "react-icons/io";
+import { BsFillCreditCardFill, BsBank } from "react-icons/bs";
+import { IconBaseProps } from 'react-icons';
+
+import {BsTag, BsArrowRight } from 'react-icons/bs'
+import { storageAdsGet } from '../../storage/storageAds';
+
 
 export default function ProductDetails() {
 
@@ -28,6 +38,38 @@ export default function ProductDetails() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
   const [selectedButton, setSelectedButton] = useState("ativado");
+  const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
+
+  const methodIcons: { [key: string]: React.ComponentType<IconBaseProps> } = {
+    boleto: RiBarcodeLine,
+    pix: RiQrCodeFill,
+    cash: IoMdCash,
+    card: BsFillCreditCardFill,
+    deposit: BsBank
+  };
+
+  async function fetchAds() {
+       
+      try {
+          const adLoad = await storageAdsGet();
+          setAds(adLoad);
+      
+      }   catch (error) {
+
+          // const isAppError = error instanceof AppError;
+          // const title = isAppError ? error.message : 'Não foi possível carregar os produtos';
+      
+          // toast.show({
+          //     title,
+          //     placement: 'top',
+          //     bgColor: 'red.500'
+          // })
+      }
+  }
+
+  useEffect(() => {
+      fetchAds()
+  }, []);  
 
   return (
     // <h1>E la vamos nos Product 16337: {JSON.stringify(query)}</h1>
@@ -39,7 +81,7 @@ export default function ProductDetails() {
           <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'> 
             <Flex direction="column" mb={20}>
               <Heading size="lg" fontWeight="normal" color="blue.500" >Anúncios</Heading>
-              <Divider my="2" borderColor="blue.500" ></Divider>
+              <Divider my="2" mb={5} borderColor="blue.500" ></Divider>
 
               <CarouselSlider
                 images={[
@@ -52,8 +94,7 @@ export default function ProductDetails() {
               <HStack 
                 justifyContent="flex-start" 
                 alignItems="center"   
-                spacing={2}   
-                mt={5}                                
+                spacing={2}                                  
               >
                 <Avatar     //IMAGEM DO USUARIO
                   size="sm" 
@@ -61,21 +102,20 @@ export default function ProductDetails() {
                   bg="blue.500" 
                   src="https://github.com/carloshenriquepvh@hotmail.com.png">
                 </Avatar>
-                <Text color="blue.700" fontWeight="bold">Carlos Henrique</Text>
+                <Text color="gray.600" fontWeight="bold">Carlos Henrique</Text>
               </HStack>
 
               <Button
                 bg="gray.200" 
-                color={selectedButton === "ativado" ? "blue.500" : "gray.400"}
-                // border={selectedButton === "ativado" ? "2px solid" : "0px solid"} 
-                _hover={{ backgroundColor: "gray.300" }}                                              
+                color={'gray.500'}
+                _hover={{ backgroundColor: "gray.200" }}                                              
                 fontSize="sm" 
                 justifyContent="center"
                 alignItems="center"
                 borderRadius={30}
                 w="15%"
                 mt={5}
-                // onClick={() => handleFilterEnabled()} 
+                cursor="default"
               >
                 HABILITADOS
               </Button> 
@@ -86,30 +126,33 @@ export default function ProductDetails() {
                 spacing={2}   
                 mt={5}                                
               >
-                <Text color="blue.700" fontWeight="bold">Cachoeira</Text>
-                <Text color="blue.700" fontWeight="bold">R$ 102,58</Text>
+                <Text color="gray.600" fontWeight="bold">Cachoeira</Text>
+                <Text color="gray.600" fontWeight="bold">R$ 102,58</Text>
               </HStack>
 
-              <Text color="blue.700" mt={5}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere doloribus voluptatem, atque neque officiis libero placeat est molestiae, illum incidunt excepturi blanditiis! Sed, eveniet impedit eum veritatis ipsum accusantium voluptate.</Text>
+              <Text color="gray.600" mt={5}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere doloribus voluptatem, atque neque officiis libero placeat est molestiae, illum incidunt excepturi blanditiis! Sed, eveniet impedit eum veritatis ipsum accusantium voluptate.</Text>
 
-              <Text color="blue.700" mt={5}>Aceita troca? Sim!</Text>
+              <Text color="gray.600" mt={5}>Aceita troca? Sim!</Text>
 
-              <Text color="blue.700" fontWeight="bold" mt={5}>Meios de pagamento</Text>
+              <Text color="gray.600" fontWeight="bold" mt={5}>Meios de pagamento</Text>
 
               <VStack
-                // onChange={setPaymentMethods} 
-                // value={paymentMethods} 
-                // accessibilityLabel="choose numbers"
                 alignItems="left"
                 justify="flex-start"
-                mt={3}
+                mt={2}
+                fontSize="sm"
               >
-                <Checkbox value='boleto' mb={1}>Boleto</Checkbox>
-                <Checkbox value='pix' mb={1}>Pix</Checkbox>
-                <Checkbox value='cash' mb={1}>Dinheiro</Checkbox>
-                <Checkbox value='card' mb={1}>Cartão Crédito</Checkbox>
-                <Checkbox value='deposit' mb={1}>Depósito Bancário</Checkbox>
-              </VStack> 
+                {ads?.payment_methods.map(method =>
+                  <HStack alignItems='center' key={method}>
+                    { methodIcons[method] && (
+                      <Icon as={methodIcons[method]} name={method} size={6} color='gray.600' mr={1}/>
+                    )}
+                    <Text fontFamily='body' textTransform='capitalize' fontSize='sm' color='gray.600'>
+                      {method}
+                    </Text>
+                  </HStack>
+                )}   
+              </VStack>
 
               <HStack 
                 justifyContent="space-between" 
