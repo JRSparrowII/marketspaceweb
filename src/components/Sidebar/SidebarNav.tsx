@@ -9,10 +9,9 @@ export function SidebarNav(){
         <Stack spacing="12" align="flex-start">
 
             <NavSection title='LANÇAMENTOS'>
-                <NavLink icon={RiAddCircleLine} href="/newtransaction">Novo Anúncio</NavLink>
-                <NavLink icon={RiFileList3Line} href="/register">Home</NavLink>  
-                {/* <NavLink icon={RiFileList3Line} href="/lancamentos/registration/receitas">Cadastros</NavLink> */}
-                <NavLink icon={RiEdit2Line} href="/transactionrecord">Meus Anúncios</NavLink>                                              
+                <NavLink icon={RiAddCircleLine} href="/newannouncement">Novo Anúncio</NavLink>
+                <NavLink icon={RiFileList3Line} href="/home">Home</NavLink>  
+                <NavLink icon={RiEdit2Line} href="/myannouncement">Meus Anúncios</NavLink>                                              
             </NavSection>
 
             {/* <NavSection title='RELATÓRIOS'>                                        

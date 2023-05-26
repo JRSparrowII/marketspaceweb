@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Flex, Heading, Divider, VStack, SimpleGrid, HStack, Text, Button, Radio, RadioGroup,
-   Switch, Image, useTheme, Checkbox, CheckboxGroup, Stack, FormControl
+   Switch, Image, useTheme, Checkbox, CheckboxGroup, Stack, FormControl, Link
 } from "@chakra-ui/react";
 
 import { RxPlus } from 'react-icons/rx'
@@ -17,14 +17,20 @@ import * as yup from 'yup'
 import { SubmitHandler, useForm } from "react-hook-form";
 import {yupResolver } from "@hookform/resolvers/yup";
 
-import Link from 'next/link'
+// import Link from 'next/link'
 import Dropzone from "../../components/Dropzone";
 import { storageAdsSave } from "../../storage/storageAds";
+import { ButtonDefault } from "../../components/Button";
+
+import { useRouter } from 'next/router';
+
   
 export default function NewAnnouncement() {
 
     const { colors, sizes } = useTheme();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const router = useRouter();
 
     const newAnnouncementFormSchema = yup.object().shape({   
         name: yup.string().required('Nome obrigatório'),
@@ -42,6 +48,14 @@ export default function NewAnnouncement() {
     const [statusProduto, setStatusProduto] = useState<string | undefined>(undefined);
     const [switchValue, setSwitchValue] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState<string[]>([])
+
+    function handleGoPreview(){
+        router.push(`/preview`);
+    };
+
+    function handleGoHome(){
+        router.push(`/home`);
+    };
 
     function RadioStatusProduct(){
         return (
@@ -160,7 +174,8 @@ export default function NewAnnouncement() {
             }
             
             await storageAdsSave(data);
-            console.log( 'TESTANDO AS 13:43 =>', data)
+            console.log( 'TESTANDO AS 10:57 =>', data)
+            handleGoPreview()
             // setIsLoading(false)
             // handleOpenPreview();      
                   
@@ -349,16 +364,25 @@ export default function NewAnnouncement() {
                         </CheckboxGroup>
 
                         <HStack justifyContent='space-between' w='100%' mt={5} mb={10}>
-                            <Button 
-                                bg='gray.200' 
-                                // ref={cancelRef} 
-                                // onClick={onClose} 
-                                w="48%"
-                            >
-                                Cancelar
-                            </Button>
+                            <ButtonDefault
+                                title="Cancelar"
+                                // icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
+                                variant="base1"
+                                size="half"
+                                onClick={handleGoHome}
+                                isLoading={isLoading}
+                            />
 
-                            <Button 
+                            <ButtonDefault
+                                title="Avançar"
+                                // icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
+                                variant="base2"
+                                size="half"
+                                onClick={handleSubmit(handleNewAd)}
+                                isLoading={isLoading}
+                            />
+
+                            {/* <Button 
                                 bg='gray.700' 
                                 color="gray.200" 
                                 isLoading={isLoading}
@@ -368,7 +392,7 @@ export default function NewAnnouncement() {
                                 w="48%"
                             >
                                 Avançar
-                            </Button>
+                            </Button> */}
                         </HStack>
                     </Flex>
                 </SimpleGrid>

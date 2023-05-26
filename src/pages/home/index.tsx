@@ -1,11 +1,11 @@
 import { Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Button, 
   InputGroup, InputRightElement, Input, useDisclosure, Switch, 
   AlertDialog, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, useTheme,
-  AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox} from "@chakra-ui/react";
+  AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox, CheckboxGroup} from "@chakra-ui/react";
 // import { Header } from "../../components/Header/Index";
 // import { SideBar } from "../../components/Sidebar/index";
 // import { NewSearchBar } from "../../components/NewSearchBar/index";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { Input } from "../../components/Form/Input";
 import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
 import {BsTag, BsArrowRight, BsPlusCircle } from 'react-icons/bs'
@@ -16,13 +16,26 @@ import { Product } from "../../components/Product";
 
 import { FiLogIn } from "react-icons/fi";
 import { MotionFlex, animationFlex, itemAnimation } from '../../styles/animation';
+import { ButtonDefault } from "../../components/Button";
+import { useRouter } from 'next/router';
+import { api } from "../../services/api";
+import { ProductDTO } from "../../dtos/ProductDTO";
+import { AppError } from "../../utils/AppError";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Home() {
 
   const { colors, sizes } = useTheme();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
-  const [selectedButton, setSelectedButton] = useState("ativado");
+  const [selectedButton, setSelectedButton] = useState("novo");
+  const [paymentMethods, setPaymentMethods] = useState<string[]>([])
+  const [filterNameInput, setFilterNameInput] = useState('');
+  const router = useRouter();
+  const [products, setProducts] = useState<ProductDTO[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -33,6 +46,85 @@ export default function Home() {
       setIsLoading(false);
     }, 2000);
   }
+
+  function handleProductDetails(product_id: string) {
+    // navigation.navigate('productdetails', {product_id});
+  }
+
+  function handleGoNewAnnouncement(){
+    router.push(`/newannouncement`);
+  };
+
+  function handleGoMyAnnouncement(){
+    router.push(`/myannouncement`);
+  };
+
+  function handleFilterEnabled() {
+    setSelectedButton('novo')
+  }
+
+  function handleFilterDisabled() {     
+    setSelectedButton('usado')
+  }
+
+  function handleSearchByNameCompany(event: any) {
+    setFilterNameInput(event.target.value);
+    console.log('DADOS ENVIADOS =>', 'Pesquisando os dados');
+  }
+
+  async function fetchProduct() {       
+    try {
+      const response = await api.get('/products');
+      setProducts(response.data);
+      console.log('aqui as 21:28 =>', response.data);
+      // setLoading(false); 
+
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível carregar os produtos';
+  
+      toast.error( title, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }    
+
+  async function handleFilterProducts() {
+    try {      
+        
+      // setIsLoading(true);                 
+                  
+      // const params = `is_new=${isNew}&accept_trade=${acceptTrade}&payment_methods=${JSON.stringify(paymentMethods)}`
+
+      // const response = await api.get(`/products?${params}`)  
+      
+      // setProducts(response.data)
+      // setIsLoading(false)
+      // handleCloseModal()
+
+    } catch (error) {
+      // const isAppError = error instanceof AppError;
+      // const title = isAppError ? error.message : 'Não foi possível carregar os filtros do produto';
+  
+      // toast.show({
+      //     title,
+      //     placement: 'top',
+      //     bgColor: 'red.500'
+      // })
+      // setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProduct()
+  },[])
   
   return (
 
@@ -61,50 +153,20 @@ export default function Home() {
               alignItems="center"   
               spacing={5}                                   
             >
-              <Heading size="md" fontWeight="normal" color="blue.500" >Produtos anúnciados para venda</Heading>
+              <Heading size="md" fontWeight="normal" color="blue.500">Produtos anúnciados para venda</Heading>
               
-              <Button 
-                bg="blue.500"
-                type="button"
-                onClick={handleLoading}
-                isLoading={isLoading}
-                loadingText="Aguarde..."
-                spinnerPlacement="end"
-                // name="Entrar"
-                color="gray.100"
-                // border="none"
-                _focus={{ border: "none" }}
-                _active={{ background: "blue.700" }}
-                _hover={{ background: "blue.700" }}
-                fontSize="sm"
-              >
-                <HStack 
-                  justifyContent="space-between" 
-                  alignItems="center"                     
-                >
-                  <BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>
-                  <Text 
-                    color="gray.200" 
-                    fontFamily={'heading'} 
-                    fontWeight="bold" 
-                    fontSize="sm"
-                  >
-                    Criar anúncio 
-                  </Text>
-                  
-                </HStack>   
-              </Button> 
-
+              <ButtonDefault
+                title="Criar anúncio"
+                icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
+                variant="base1"
+                // loadingText="Aguarde..."
+                size="small"
+                onClick={handleGoNewAnnouncement}
+              />
             </HStack>
             <Divider my="2" borderColor="blue.500" ></Divider>
 
-            <Box
-              bg="blue.100" 
-              mt={5}          
-              rounded={5}   
-              h={20} 
-              w="100%"                         
-            >             
+            <Box bg="blue.100" mt={5} rounded={5} h={20} w="100%">             
               <HStack justifyContent="space-between" alignItems="center" padding={3}>                
                 <HStack 
                   justifyContent="space-between" 
@@ -128,7 +190,7 @@ export default function Home() {
                   </VStack>
                 </HStack>
 
-                <Button bg="blue.100">
+                <Button bg="blue.100" _hover={{ backgroundColor: "blue.100" }} onClick={handleGoMyAnnouncement}>
                   <HStack 
                     justifyContent="space-between" 
                     alignItems="center"                 
@@ -143,7 +205,8 @@ export default function Home() {
                     </Text>
                     <BsArrowRight color={colors.blue[500]} size={sizes[5]}/>
                   </HStack>   
-                </Button>                                                
+                </Button>   
+
               </HStack>                    
             </Box>
 
@@ -160,8 +223,8 @@ export default function Home() {
                 _placeholder={{color: 'gray.400'}}
                 fontSize="sm"                                                    
                 type="text" 
-                // value={filterNameInput} 
-                // onChange={handleSearchByNameCompany}
+                value={filterNameInput} 
+                onChange={handleSearchByNameCompany}
               />       
 
               <InputRightElement 
@@ -172,7 +235,7 @@ export default function Home() {
                     <Spinner size="sm" />
                 ) : ( */}
                     <HStack spacing={2} pr={5} mr={6}>
-                      <RiSearchLine color={colors.blue[500]} size={sizes[5]}/>
+                      <RiSearchLine color={colors.blue[500]} size={sizes[5]} onClick={handleSearchByNameCompany}/>
                       <Text>|</Text>
                       <RiSoundModuleFill color={colors.blue[500]} size={sizes[5]} onClick={onOpen}/>
                     </HStack>
@@ -189,7 +252,29 @@ export default function Home() {
               h='500px'
               mt={10}
             >
-              <Product
+              {products.map((product) => (
+                // <CardClient
+                //   key={company.clientId}
+                //   isChecked={company.selected || selectAllCheckBox}
+                //   onChange={() => handleSelectOneCheckbox(company.clientId)}
+                //   fantasyName={company.client.fantasyName}
+                //   cnpjClient={formattedCNPJ(company.client.cnpj)}
+                //   stateButton={stateButton}
+                //   isLoading={isLoading}
+                //   statusChange={() => handleChangeStatus(company.client.cnpj)}
+                // />  
+                
+                <Product
+                  product_images={product.product_images}
+                  name={product.name}
+                  price={product.price}
+                  is_new={product.is_new}
+                  is_active={product.is_active}
+                  onClick={() => handleProductDetails(product.id)} 
+                />
+              ))}
+
+              {/* <Product
                 // product_images='eeeeeee'
                 name={'Carlos'}
                 price={999}
@@ -210,20 +295,11 @@ export default function Home() {
               <Product
                 // product_images='eeeeeee'
                 name={'Carlos'}
-                price={999}
+                price={125}
                 user={'item.user'}
                 is_active={true}
                 // onPress={() => handleProductDetails(item.id)} 
-              />
-
-              <Product
-                // product_images='eeeeeee'
-                name={'Carlos'}
-                price={999}
-                user={'item.user'}
-                is_active={true}
-                // onPress={() => handleProductDetails(item.id)} 
-              />
+              /> */}
 
             </SimpleGrid>
 
@@ -248,30 +324,30 @@ export default function Home() {
                   <HStack mb={5}>
                     <Button
                       bg="gray.200" 
-                      color={selectedButton === "ativado" ? "blue.500" : "gray.400"}
-                      border={selectedButton === "ativado" ? "2px solid" : "0px solid"} 
+                      color={selectedButton === "novo" ? "blue.500" : "gray.400"}
+                      border={selectedButton === "novo" ? "2px solid" : "0px solid"} 
                       _hover={{ backgroundColor: "gray.300" }}                                              
                       fontSize="sm" 
                       justifyContent="center"
                       alignItems="center"
-                      borderRadius={30}
-                      // onClick={() => handleFilterEnabled()} 
+                      borderRadius={20}
+                      onClick={() => handleFilterEnabled()} 
                     >
-                      HABILITADOS
+                      Novo
                     </Button> 
 
                     <Button
                       bg="gray.200" 
-                      color={selectedButton === "desativado" ? "blue.500" : "gray.400"}
-                      border={selectedButton === "desativado" ? "2px solid" : "0px solid"}  
+                      color={selectedButton === "usado" ? "blue.500" : "gray.400"}
+                      border={selectedButton === "usado" ? "2px solid" : "0px solid"}  
                       _hover={{ backgroundColor: "gray.300" }}                                            
                       fontSize="sm" 
                       justifyContent="center"
                       alignItems="center"
-                      borderRadius={30}
-                      // onClick={() => handleFilterDisabled()} 
+                      borderRadius={20}
+                      onClick={() => handleFilterDisabled()} 
                     >
-                      NÃO HABILITADOS
+                      Usado
                     </Button> 
                   </HStack>    
 
@@ -283,27 +359,28 @@ export default function Home() {
                     // isChecked={isBannerVisible}
                     // onChange={handleSwitchChange}
                     size="lg"
-                    colorScheme="green"
+                    colorScheme="blue"
                     id='email-alerts'
                   />
 
                   <Text fontFamily='heading' fontSize='sm' color='gray.600' mb={3} mt={5}>
                     Métodos de Pagamentos Aceitos:
                   </Text>
-                
-                  <VStack
-                    // onChange={setPaymentMethods} 
-                    // value={paymentMethods} 
-                    // accessibilityLabel="choose numbers"
-                    alignItems="left"
-                    justify="flex-start"
+
+                  <CheckboxGroup 
+                    colorScheme='blue' 
+                    onChange={setPaymentMethods} 
+                    value={paymentMethods} 
+                    accessibilityLabel="choose numbers"
                   >
-                    <Checkbox value='boleto' mb={1}>Boleto</Checkbox>
-                    <Checkbox value='pix' mb={1}>Pix</Checkbox>
-                    <Checkbox value='cash' mb={1}>Dinheiro</Checkbox>
-                    <Checkbox value='card' mb={1}>Cartão Crédito</Checkbox>
-                    <Checkbox value='deposit' mb={1}>Depósito Bancário</Checkbox>
-                  </VStack> 
+                    <VStack spacing={[1, 2]} direction={['column']} alignItems="left" justify="flex-start" mt={3}>
+                      <Checkbox value='boleto' color="gray.500" size='sm'>Boleto</Checkbox>
+                      <Checkbox value='pix'color="gray.500" size='sm'>Pix</Checkbox>
+                      <Checkbox value='cash' color="gray.500" size='sm'>Dinheiro</Checkbox>
+                      <Checkbox value='card' color="gray.500" size='sm'>Cartão Crédito</Checkbox>
+                      <Checkbox value='deposit' color="gray.500" size='sm'>Depósito Bancário</Checkbox>
+                    </VStack>
+                  </CheckboxGroup>
                 </AlertDialogBody>
 
                 <AlertDialogFooter>
@@ -313,6 +390,8 @@ export default function Home() {
                       // ref={cancelRef} 
                       onClick={onClose} 
                       w="48%"
+                      fontSize='sm'
+                      _hover={{ backgroundColor: "gray.300" }}
                     >
                       Resetar Filtros
                     </Button>
@@ -321,8 +400,10 @@ export default function Home() {
                       bg='gray.700' 
                       color="gray.200" 
                       // ref={cancelRef} 
-                      onClick={onClose} 
+                      onClick={handleFilterProducts} 
                       w="48%"
+                      fontSize='sm'
+                      _hover={{ backgroundColor: "gray.400" }}
                     >
                       Aplicar Filtros
                     </Button>
@@ -334,6 +415,7 @@ export default function Home() {
           </MotionFlex>
         </SimpleGrid>
       </MotionFlex>
+      <ToastContainer/>
     </Flex>
   )
 }

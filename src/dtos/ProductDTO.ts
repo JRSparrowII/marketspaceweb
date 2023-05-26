@@ -8,7 +8,7 @@ export type ProductDTO = {
     payment_methods: string[];
     product_images?: ImageStyleProps[]; //NAO OBRIGATORIO DEPOIS TIRAR
     user: UserProps;
-    onPress?: (userProduct_id: string) => Promise <void>;
+    onClick?: (userProduct_id: string) => Promise <void>;
     is_active?: boolean;
 };
 

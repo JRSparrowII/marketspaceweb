@@ -20,6 +20,7 @@ import {yupResolver } from "@hookform/resolvers/yup";
 import Link from 'next/link'
 import Dropzone from "../../components/Dropzone";
 import { storageAdsSave } from "../../storage/storageAds";
+import { ButtonDefault } from "../../components/Button";
   
 export default function EditAds() {
 
@@ -349,26 +350,23 @@ export default function EditAds() {
                         </CheckboxGroup>
 
                         <HStack justifyContent='space-between' w='100%' mt={5} mb={10}>
-                            <Button 
-                                bg='gray.200' 
-                                // ref={cancelRef} 
-                                // onClick={onClose} 
-                                w="48%"
-                            >
-                                Cancelar
-                            </Button>
-
-                            <Button 
-                                bg='gray.700' 
-                                color="gray.200" 
+                            <ButtonDefault
+                                title="Cancelar"
+                                // icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
+                                variant="base1"
+                                size="half"
+                                onClick={handleLoading}
                                 isLoading={isLoading}
-                                loadingText="Aguarde..."
-                                spinnerPlacement="end"
-                                onClick={handleSubmit(handleNewAd)} 
-                                w="48%"
-                            >
-                                Avançar
-                            </Button>
+                            />
+
+                            <ButtonDefault
+                                title="Avançar"
+                                // icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
+                                variant="base2"
+                                size="half"
+                                onClick={handleSubmit(handleNewAd)}
+                                isLoading={isLoading}
+                            />
                         </HStack>
                     </Flex>
                 </SimpleGrid>

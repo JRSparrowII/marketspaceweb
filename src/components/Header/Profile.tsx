@@ -8,26 +8,29 @@ interface ProfileProps{
     showProfileData?: boolean;
 }
 
+import {useAuth} from '../../hooks/useAuth'
+
 export function Profile({showProfileData = true}:ProfileProps){  
     
     //Modal do botão Excluir na tabela
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef()
+    const { signOut, user} = useAuth();
 
     return (
         <Flex align="center"> 
             {showProfileData && (
                 <Box mr="4" textAlign="right">
-                    <Text color="blue.700" fontWeight="bold">Carlos Henrique</Text>
+                    <Text color="blue.700" fontWeight="bold">{user.name}</Text>
                     <Text color="blue.500" fontSize="small">
-                        henrique@gmail.com
+                        {user.email}
                     </Text>
                 </Box>                
             )}
             
             <Avatar     //IMAGEM DO USUARIO
                 size="md" 
-                name='Carlos Henrique'
+                name={user.name}
                 bg="blue.500" 
                 src="https://github.com/carloshenriquepvh@hotmail.com.png">
             </Avatar>
@@ -56,7 +59,7 @@ export function Profile({showProfileData = true}:ProfileProps){
                         Não, Volte!
                     </Button>
                     <Link href="/" passHref>
-                        <Button colorScheme='whatsapp' ml={3}>
+                        <Button colorScheme='whatsapp' ml={3} onClick={signOut}>
                             Sim, Tenho certeza!
                         </Button>
                     </Link>
