@@ -7,13 +7,19 @@ import { ButtonDefault } from '../components/Button';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logo from '../assets/logo.svg';
 
 import Link from 'next/link';
 
 import * as yup from 'yup'
 import { SubmitHandler, useForm } from "react-hook-form";
 import {yupResolver } from "@hookform/resolvers/yup"
+
 import { RiKeyboardBoxFill } from 'react-icons/ri';
+import { AppError } from '../utils/AppError';
+
+import { useAuth } from '../hooks/useAuth'
+import { useRouter } from 'next/router';
 
 type FormDataProps = {
   email: string;
@@ -23,6 +29,8 @@ type FormDataProps = {
 export default function SignIn() {
 
   const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useAuth();
+  const router = useRouter();
 
   const signInFormSchema = yup.object().shape({   
     email: yup.string().required('E-mail obrigatório').email('E-mail Inválido'),
@@ -39,16 +47,15 @@ export default function SignIn() {
     
   }
 
+  function handleGoHome(){
+    router.push(`/home`);
+  };
+
   async function handleSignIn({email, password }: FormDataProps) {
     try {
-      setIsLoading(true)
-      
-      const data = {
-        email: email,
-        password: password
-      }
 
-      console.log(data)
+      setIsLoading(true)
+      await signIn(email, password);
 
       toast.success('Seu login foi realizado com sucesso!', {
         position: "top-right",
@@ -63,10 +70,26 @@ export default function SignIn() {
 
       setIsLoading(false);
 
+      handleGoHome()
+
     } catch (error) {
+
+      const isAppError = error instanceof AppError
+      const title = isAppError ? error.message : 'Não foi possível entrar agora! Tente mais tarde!'
+
+      toast.error( title, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
         
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }      
   }  
 
@@ -89,7 +112,7 @@ export default function SignIn() {
       >  
         <Flex flexDir="column" mb={10} mt={10} justify="center" align="center">
           <Box w="50px" h="50px" bg="gray.300">
-            {/* <Logo/> */}
+            {/* <logoImg/> */}
           </Box>
           <Text fontSize="35"color="gray.700" fontWeight="bold" textAlign="center"> marketspace</Text>
           <Text fontSize="14" color="gray.700" textAlign="center"> Seu espaço de compra e venda</Text>

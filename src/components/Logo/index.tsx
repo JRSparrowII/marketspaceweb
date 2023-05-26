@@ -1,6 +1,6 @@
 import { Center, Image, ImageProps } from "@chakra-ui/react";
 
-import logo from '../assets/logo.svg';
+import logoImg from '../assets/logo.svg';
 
 interface LogoProps {
   src?: string;
@@ -12,7 +12,7 @@ export function Logo({ src, ...rest }: LogoProps) {
     <>
       <Center>
         <Image
-          src={src || logo}
+          src={src || logoImg}
           width={"8.75rem"}
           {...rest}
         />

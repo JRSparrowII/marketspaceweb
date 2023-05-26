@@ -31,12 +31,14 @@ import { storageAdsGet } from '../../storage/storageAds';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ButtonDefault } from '../../components/Button';
 
 export default function Preview() {
 
     const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { colors, sizes } = useTheme();
+    const router = useRouter();
 
     const methodIcons: { [key: string]: React.ComponentType<IconBaseProps> } = {
         boleto: RiBarcodeLine,
@@ -53,6 +55,10 @@ export default function Preview() {
             setIsLoading(false);
         }, 2000);
     }
+
+    function handleGoHome(){
+        router.push(`/newannouncement`);
+    };
 
     async function handleCreateNewAd() {           
         try {
@@ -112,6 +118,8 @@ export default function Preview() {
             //     })   
 
             //     // handleGoHome();
+
+            handleGoHome();
 
             // } else {
             //     throw new Error();
@@ -252,69 +260,23 @@ export default function Preview() {
 
                 <HStack justifyContent='space-between' w='100%' mt={5} mb={5} bg="white" h={20} px={10}>
 
-                    <Button 
-                        bg="gray.300"
-                        type="button"
+                    <ButtonDefault
+                        title="Voltar e Editar"
+                        icon={<RiArrowLeftLine color={colors.gray[600]} size={sizes[5]}/>}
+                        variant="default"
+                        size="half"
                         onClick={handleCreateNewAd}
                         isLoading={isLoading}
-                        loadingText="Aguarde..."
-                        spinnerPlacement="end"
-                        w="48%"
-                        // name="Entrar"
-                        color="gray.800"
-                        // border="none"
-                        _focus={{ border: "none" }}
-                        _active={{ background: "blue.700" }}
-                        _hover={{ background: "blue.700" }}
-                        fontSize="sm"
-                    >
-                        <HStack 
-                            justifyContent="space-between" 
-                            alignItems="center"                     
-                        >
-                            <RiArrowLeftLine color={colors.gray[600]} size={sizes[5]}/>
-                            <Text 
-                                color="gray.600" 
-                                fontFamily={'heading'} 
-                                fontWeight="bold" 
-                                fontSize="sm"
-                            >
-                                Voltar e Editar 
-                            </Text>                        
-                        </HStack>   
-                    </Button>
+                    />
 
-                    <Button 
-                        bg="blue.500"
-                        type="button"
+                    <ButtonDefault
+                        title="Publicar"
+                        icon={<BsTag color={colors.gray[200]} size={sizes[4]}/>}
+                        variant="base1"
+                        size="half"
                         onClick={handleCreateNewAd}
                         isLoading={isLoading}
-                        loadingText="Aguarde..."
-                        spinnerPlacement="end"
-                        w="48%"
-                        // name="Entrar"
-                        color="gray.100"
-                        // border="none"
-                        _focus={{ border: "none" }}
-                        _active={{ background: "blue.700" }}
-                        _hover={{ background: "blue.700" }}
-                        fontSize="sm"
-                    >
-                        <HStack 
-                            justifyContent="space-between" 
-                            alignItems="center"                     
-                        >
-                            <BsTag color={colors.gray[200]} size={sizes[4]}/>
-                            <Text 
-                                color="gray.200" 
-                                fontFamily={'heading'} 
-                                fontWeight="bold" 
-                                fontSize="sm"
-                            >
-                                Publicar 
-                            </Text>                        
-                        </HStack>   
-                    </Button> 
+                    />
                 </HStack>              
             </Flex>
           </SimpleGrid>

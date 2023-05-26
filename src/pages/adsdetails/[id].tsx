@@ -29,6 +29,7 @@ import { IconBaseProps } from 'react-icons';
 import {BsTag, BsArrowRight } from 'react-icons/bs'
 import { storageAdsGet } from '../../storage/storageAds';
 import { ProductDetailsDTO } from '../../dtos/ProductDetailsDTO';
+import { ButtonDefault } from '../../components/Button';
 
 
 export default function AdsDetails() {
@@ -41,6 +42,7 @@ export default function AdsDetails() {
   const [selectedButton, setSelectedButton] = useState("ativado");
   const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
   const [product, setProduct] = useState<ProductDetailsDTO>({} as ProductDetailsDTO); 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const methodIcons: { [key: string]: React.ComponentType<IconBaseProps> } = {
     boleto: RiBarcodeLine,
@@ -49,6 +51,14 @@ export default function AdsDetails() {
     card: BsFillCreditCardFill,
     deposit: BsBank
   };
+
+  function DisableAd(){
+
+  }
+
+  function RemoveAd(){
+    
+  }
 
   async function fetchAds() {
        
@@ -91,75 +101,25 @@ export default function AdsDetails() {
                 spacing={2}   
                 mb={5}                                
               >
-                <Button 
-                  bg='gray.300'
-                  type="button"
-                  // onClick={handleLoading}
-                  // isLoading={isLoading}
-                  // loadingText="Aguarde..."
-                  // spinnerPlacement="end"
-                  // name="Entrar"
-                  color="gray.100"
-                  // border="none"
-                  _focus={{ border: "none" }}
-                  _active={{ background: "blue.700" }}
-                  _hover={{ background: "gray.500" }}
-                  fontSize="sm"
-                  w='15%'
-                >
-                  <HStack 
-                    justifyContent="space-between" 
-                    alignItems="center"                     
-                  >
-                    <RiArrowLeftLine color={colors.gray[700]} size={sizes[5]}/>
-                    <Text 
-                      color="gray.700" 
-                      fontFamily={'heading'} 
-                      fontWeight="bold" 
-                      fontSize="sm"
-                    >
-                      Voltar 
-                    </Text>
-                    
-                  </HStack>   
-                </Button> 
+                <ButtonDefault
+                  title="Voltar"
+                  icon={<RiArrowLeftLine color={colors.gray[700]} size={sizes[5]}/>}
+                  variant="default"
+                  size="small"
+                  onClick={DisableAd}
+                  isLoading={isLoading}
+                />
 
-
-                <Button 
-                  bg='gray.300'
-                  type="button"
-                  // onClick={handleLoading}
-                  // isLoading={isLoading}
-                  // loadingText="Aguarde..."
-                  // spinnerPlacement="end"
-                  // name="Entrar"
-                  color="gray.100"
-                  // border="none"
-                  _focus={{ border: "none" }}
-                  _active={{ background: "blue.700" }}
-                  _hover={{ background: "gray.500" }}
-                  fontSize="sm"
-                  w='15%'
-                >
-                  <HStack 
-                    justifyContent="space-between" 
-                    alignItems="center"                     
-                  >
-                    <RiPencilLine color={colors.gray[700]} size={sizes[5]}/>
-                    <Text 
-                      color="gray.700" 
-                      fontFamily={'heading'} 
-                      fontWeight="bold" 
-                      fontSize="sm"
-                    >
-                      Editar 
-                    </Text>
-                  </HStack>   
-                </Button> 
+                <ButtonDefault
+                  title="Editar"
+                  icon={<RiPencilLine color={colors.gray[700]} size={sizes[5]}/>}
+                  variant="default"
+                  size="small"
+                  onClick={DisableAd}
+                  isLoading={isLoading}
+                />
               </HStack>
-
               
-
               <VStack>
                 <CarouselSlider
                   images={[
@@ -250,72 +210,23 @@ export default function AdsDetails() {
                 spacing={2}   
                 mt={5}                                
               > 
-                <Button 
-                  bg='gray.900'
-                  type="button"
-                  // onClick={handleLoading}
-                  // isLoading={isLoading}
-                  // loadingText="Aguarde..."
-                  // spinnerPlacement="end"
-                  // name="Entrar"
-                  color="gray.100"
-                  // border="none"
-                  _focus={{ border: "none" }}
-                  _active={{ background: "blue.700" }}
-                  _hover={{ background: "gray.500" }}
-                  fontSize="sm"
-                  w='100%'
-                >
-                  <HStack 
-                    justifyContent="space-between" 
-                    alignItems="center"                     
-                  >
-                    <BsPower color={colors.gray[200]} size={sizes[5]}/>
-                    <Text 
-                      color="gray.200" 
-                      fontFamily={'heading'} 
-                      fontWeight="bold" 
-                      fontSize="sm"
-                    >
-                      Desativar Anúncio 
-                    </Text>
-                    
-                  </HStack>   
-                </Button> 
+                <ButtonDefault
+                  title="Desativar Anúncio"
+                  icon={<BsPower color={colors.gray[200]} size={sizes[5]}/>}
+                  variant="base2"
+                  size="total"
+                  onClick={DisableAd}
+                  isLoading={isLoading}
+                />
 
-                <Button 
-                  bg='gray.300'
-                  type="button"
-                  // onClick={handleLoading}
-                  // isLoading={isLoading}
-                  // loadingText="Aguarde..."
-                  // spinnerPlacement="end"
-                  // name="Entrar"
-                  color="gray.100"
-                  // border="none"
-                  _focus={{ border: "none" }}
-                  _active={{ background: "blue.700" }}
-                  _hover={{ background: "gray.400" }}
-                  fontSize="sm"
-                  w='100%'
-                >
-                  <HStack 
-                    justifyContent="space-between" 
-                    alignItems="center"                     
-                  >
-                    <BsTrash color={colors.gray[700]} size={sizes[5]}/>
-                    <Text 
-                      color="gray.700" 
-                      fontFamily={'heading'} 
-                      fontWeight="bold" 
-                      fontSize="sm"
-                    >
-                      Excluir Anúncio 
-                    </Text>
-                    
-                  </HStack>   
-                </Button> 
-
+                <ButtonDefault
+                  title="Excluir Anúncio"
+                  icon={<BsTrash color={colors.gray[700]} size={sizes[5]}/>}
+                  variant="default"
+                  size="total"
+                  onClick={RemoveAd}
+                  isLoading={isLoading}
+                />    
               </VStack>
             </Flex>
           </SimpleGrid>
