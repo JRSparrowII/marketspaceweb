@@ -32,6 +32,8 @@ import { storageAdsGet } from '../../storage/storageAds';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ButtonDefault } from '../../components/Button';
+import { api } from '../../services/api';
+import { AppError } from '../../utils/AppError';
 
 export default function Preview() {
 
@@ -56,35 +58,33 @@ export default function Preview() {
         }, 2000);
     }
 
-    function handleGoHome(){
+    function handleGoNewAnnouncement(){
         router.push(`/newannouncement`);
+    };
+
+    function handleGoHome(){
+        router.push(`/home`);
     };
 
     async function handleCreateNewAd() {           
         try {
             // setIsLoading(true);
+
             const data = {
                 name: ads?.name,
                 description: ads?.description,
                 is_new: ads?.is_new,
                 price: ads?.price,
                 accept_trade: ads?.accept_trade,
-                payment_methods: ads?.payment_methods
+                payment_methods: ads?.payment_methods,
+                images: ads?.images
             }
 
-            // const response_product = await api.post('/products', data);  
-            handleLoading()
+            // console.log('aqui as 13:52 =>', data);
 
-            toast.success('Seu anúncio foi publicado com sucesso!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+            // const response_product = await api.post('/products', data); 
+            // console.log('aqui as 13:52 =>', response_product); 
+            handleLoading()
                         
             // if (response_product.data.id) {   
 
@@ -109,15 +109,19 @@ export default function Preview() {
             //             return formData;
             //         },
             //     });
+            // }
 
-            //     const title = 'Seu anúncio foi salvo com sucesso!';
-            //     toast.show({    
-            //         title,
-            //         placement: 'top',
-            //         bgColor: 'green.500'
-            //     })   
-
-            //     // handleGoHome();
+            const title = 'Seu anúncio foi salvo com sucesso!';
+            toast.success( title, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
 
             handleGoHome();
 
@@ -127,17 +131,22 @@ export default function Preview() {
 
         } catch(error) {
 
-            // const isAppError = error instanceof AppError;
-            // const title = isAppError ? error.message : 
-            // 'Não foi possível enviar os dados. Tente novamente mais tarde';
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 
+            'Não foi possível enviar os dados. Tente novamente mais tarde';
 
-            // setIsLoading(false);
+            setIsLoading(false);
         
-            // toast.show({    
-            //     title,
-            //     placement: 'top',
-            //     bgColor: 'red.500'
-            // })
+            toast.error( title, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }
     }
 
@@ -149,14 +158,19 @@ export default function Preview() {
         
         }   catch (error) {
 
-            // const isAppError = error instanceof AppError;
-            // const title = isAppError ? error.message : 'Não foi possível carregar os produtos';
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível carregar os produtos';
         
-            // toast.show({
-            //     title,
-            //     placement: 'top',
-            //     bgColor: 'red.500'
-            // })
+            toast.error( title, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }
     }
 
@@ -265,7 +279,7 @@ export default function Preview() {
                         icon={<RiArrowLeftLine color={colors.gray[600]} size={sizes[5]}/>}
                         variant="default"
                         size="half"
-                        onClick={handleCreateNewAd}
+                        onClick={handleGoNewAnnouncement}
                         isLoading={isLoading}
                     />
 
