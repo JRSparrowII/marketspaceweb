@@ -36,6 +36,8 @@ export default function Home() {
   const [filterNameInput, setFilterNameInput] = useState('');
   const router = useRouter();
   const [products, setProducts] = useState<ProductDTO[]>([]);
+  const [filterName, setFilterName] = useState('')
+  
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -67,16 +69,36 @@ export default function Home() {
     setSelectedButton('usado')
   }
 
-  function handleSearchByNameCompany(event: any) {
-    setFilterNameInput(event.target.value);
-    console.log('DADOS ENVIADOS =>', 'Pesquisando os dados');
+  function handleSearchByNameProduct(event: any) {
+    setFilterNameInput(event.target.value); 
+  }
+
+  async function handleFilterByName() {
+    try {           
+      const response = await api.get(`/products?query=${filterNameInput}`)
+      setProducts(response.data)    
+
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível carregar os filtros do produto';
+  
+      toast.error( title, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
   }
 
   async function fetchProduct() {       
     try {
       const response = await api.get('/products');
       setProducts(response.data);
-      console.log('aqui as 21:28 =>', response.data);
       // setLoading(false); 
 
     } catch (error) {
@@ -224,7 +246,7 @@ export default function Home() {
                 fontSize="sm"                                                    
                 type="text" 
                 value={filterNameInput} 
-                onChange={handleSearchByNameCompany}
+                onChange={handleSearchByNameProduct}
               />       
 
               <InputRightElement 
@@ -235,7 +257,7 @@ export default function Home() {
                     <Spinner size="sm" />
                 ) : ( */}
                     <HStack spacing={2} pr={5} mr={6}>
-                      <RiSearchLine color={colors.blue[500]} size={sizes[5]} onClick={handleSearchByNameCompany}/>
+                      <RiSearchLine color={colors.blue[500]} size={sizes[5]} onClick={handleFilterByName}/>
                       <Text>|</Text>
                       <RiSoundModuleFill color={colors.blue[500]} size={sizes[5]} onClick={onOpen}/>
                     </HStack>
@@ -252,55 +274,18 @@ export default function Home() {
               h='500px'
               mt={10}
             >
-              {products.map((product) => (
-                // <CardClient
-                //   key={company.clientId}
-                //   isChecked={company.selected || selectAllCheckBox}
-                //   onChange={() => handleSelectOneCheckbox(company.clientId)}
-                //   fantasyName={company.client.fantasyName}
-                //   cnpjClient={formattedCNPJ(company.client.cnpj)}
-                //   stateButton={stateButton}
-                //   isLoading={isLoading}
-                //   statusChange={() => handleChangeStatus(company.client.cnpj)}
-                // />  
-                
-                <Product
-                  product_images={product.product_images}
-                  name={product.name}
-                  price={product.price}
-                  is_new={product.is_new}
-                  is_active={product.is_active}
-                  onClick={() => handleProductDetails(product.id)} 
-                />
+              {products.map((product) => (    
+                 <Link href={`/products/${product.id}`} key={product.id}>            
+                  <Product
+                    product_images={product.product_images}
+                    name={product.name}
+                    price={product.price}
+                    is_new={product.is_new}
+                    is_active={product.is_active}
+                    // onClick={() => handleProductDetails(product.id)} 
+                  />
+                </Link>
               ))}
-
-              {/* <Product
-                // product_images='eeeeeee'
-                name={'Carlos'}
-                price={999}
-                user={'item.user'}
-                is_active={true}
-                // onPress={() => handleProductDetails(item.id)} 
-              />
-
-              <Product
-                // product_images='eeeeeee'
-                name={'Carlos'}
-                price={999}
-                user={'item.user'}
-                is_active={true}
-                // onPress={() => handleProductDetails(item.id)} 
-              />
-
-              <Product
-                // product_images='eeeeeee'
-                name={'Carlos'}
-                price={125}
-                user={'item.user'}
-                is_active={true}
-                // onPress={() => handleProductDetails(item.id)} 
-              /> */}
-
             </SimpleGrid>
 
             <AlertDialog

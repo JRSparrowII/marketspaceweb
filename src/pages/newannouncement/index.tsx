@@ -170,11 +170,11 @@ export default function NewAnnouncement() {
                 price: price,
                 accept_trade:  switchValue,
                 payment_methods: paymentMethods,
+                // images: images.map(image => ({ url: image })),
                 images: images
             }
             
             await storageAdsSave(data);
-            console.log( 'TESTANDO AS 10:57 =>', data)
             handleGoPreview()
             // setIsLoading(false)
             // handleOpenPreview();      

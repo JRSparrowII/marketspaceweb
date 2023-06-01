@@ -1,4 +1,4 @@
-import {Flex, Stack, Icon, Text, Image, Box, SimpleGrid, VStack, FormControl, InputGroup } from '@chakra-ui/react';
+import {Flex, Stack, Icon, Text, Box, SimpleGrid, VStack, FormControl, InputGroup } from '@chakra-ui/react';
 import {useState, FormEvent, useContext, useEffect} from 'react';
 
 import { Input } from '../components/Input';
@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import logo from '../assets/logo.svg';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 import * as yup from 'yup'
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -93,6 +94,10 @@ export default function SignIn() {
     }      
   }  
 
+  useEffect(() => {
+    setTimeout(() => {}, 3000)
+  }, [])
+
   return (
     <Flex 
       w="100vw" 
@@ -112,6 +117,12 @@ export default function SignIn() {
       >  
         <Flex flexDir="column" mb={10} mt={10} justify="center" align="center">
           <Box w="50px" h="50px" bg="gray.300">
+            {/* <Image
+              src="/assets/logo.svg"
+              width={20}
+              height={20}
+              alt=""
+            /> */}
             {/* <logoImg/> */}
           </Box>
           <Text fontSize="35"color="gray.700" fontWeight="bold" textAlign="center"> marketspace</Text>
