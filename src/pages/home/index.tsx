@@ -25,6 +25,15 @@ import { AppError } from "../../utils/AppError";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// export async function getStaticProps() {
+//   const response = await api.get('/products')
+
+//   return {
+//     props: { response },
+//   }
+// }
+
+
 
 export default function Home() {
 
