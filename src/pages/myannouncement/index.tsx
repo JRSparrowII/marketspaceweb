@@ -3,11 +3,8 @@ import { Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Bu
     AlertDialog, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, useTheme,
     AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox, Stack, Tag, Select, Center} from "@chakra-ui/react"
 ;
-// import { Header } from "../../components/Header/Index";
-// import { SideBar } from "../../components/Sidebar/index";
-// import { NewSearchBar } from "../../components/NewSearchBar/index";
+
 import React, { useEffect, useState } from "react";
-// import { Input } from "../../components/Form/Input";
 import {RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
 import { RxPlus } from 'react-icons/rx'
 import Link from 'next/link'
