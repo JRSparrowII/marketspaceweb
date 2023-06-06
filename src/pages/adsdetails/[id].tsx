@@ -31,6 +31,11 @@ import { storageAdsGet } from '../../storage/storageAds';
 import { ProductDetailsDTO } from '../../dtos/ProductDetailsDTO';
 import { ButtonDefault } from '../../components/Button';
 import { api } from '../../services/api';
+import { AppError } from '../../utils/AppError';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 // export async function getServerSideProps(context) {
 
@@ -64,8 +69,8 @@ import { api } from '../../services/api';
 
 export default function MyProductDetails() {
 
-  const router = useRouter()
-  const MyProductDetailsID = router.query.myProductDetailsID
+  // const router = useRouter()
+  // const MyProductDetailsID = router.query.myProductDetailsID
 
   const { colors, sizes } = useTheme();
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -74,6 +79,9 @@ export default function MyProductDetails() {
   const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
   const [product, setProduct] = useState<ProductDetailsDTO>({} as ProductDetailsDTO); 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const router = useRouter();
+  const { id } = router.query;
 
   const methodIcons: { [key: string]: React.ComponentType<IconBaseProps> } = {
     boleto: RiBarcodeLine,
@@ -87,9 +95,9 @@ export default function MyProductDetails() {
     router.push(`/myannouncement`);
   };
 
-  function EditMyAd(){
-    <Link href={`/myannouncement/${MyProductDetailsID}/editMyAds/1`}></Link>
-  }
+  // function EditMyAd(){
+  //   <Link href={`/myannouncement/${MyProductDetailsID}/editMyAds/1`}></Link>
+  // }
 
   function DisableAd(){
 
@@ -98,6 +106,35 @@ export default function MyProductDetails() {
   function RemoveAd(){
     
   }
+
+  async function fetchProductDetails() {       
+    try {
+      const response = await api.get(`/products/${id}`);
+      // const response = await api.get('/products/7f24effe-e0fb-4e4f-b9d3-4d87bea80583');
+      setProduct(response.data);
+      // console.log('aqui as 11:36 =>', response.data);
+      // setLoading(false); 
+
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível carregar os produtos';
+  
+      toast.error( title, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }
+  }   
+
+  useEffect(() => {
+    fetchProductDetails()
+  },[product.id])
 
   async function fetchAds() {
        
@@ -269,6 +306,7 @@ export default function MyProductDetails() {
               </VStack>
             </Flex>
           </SimpleGrid>
+          <ToastContainer/>
         </Flex>
     </Flex>
   )

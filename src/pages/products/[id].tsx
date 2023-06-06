@@ -20,11 +20,15 @@ import { useAuth } from '../../hooks/useAuth';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
 
 export default function ProductDetails() {
 
   const [product, setProduct] = useState<ProductDetailsDTO>({} as ProductDetailsDTO);
   const { user } = useAuth();
+
+  const router = useRouter();
+  const { id } = router.query;
 
   const methodIcons: { [key: string]: React.ComponentType<IconBaseProps> } = {
     boleto: RiBarcodeLine,
@@ -36,8 +40,8 @@ export default function ProductDetails() {
 
   async function fetchProductDetails() {       
     try {
-      // const response = await api.get(`/products/${product.id}`);
-      const response = await api.get('/products/7f24effe-e0fb-4e4f-b9d3-4d87bea80583');
+      const response = await api.get(`/products/${id}`);
+      // const response = await api.get('/products/7f24effe-e0fb-4e4f-b9d3-4d87bea80583');
       setProduct(response.data);
       // console.log('aqui as 11:36 =>', response.data);
       // setLoading(false); 

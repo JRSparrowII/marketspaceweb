@@ -21,6 +21,8 @@ import { api } from "../../services/api";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { useRouter } from 'next/router';
+
   
 export default function MyAnnouncement() {
 
@@ -30,6 +32,9 @@ export default function MyAnnouncement() {
     const [selectedButton, setSelectedButton] = useState("ativado");
     const [products, setProducts] = useState<ProductDTO[]>([]);
     const [filterTypeSelected, setFilterTypeSelected] = useState('todos');
+
+    const router = useRouter();
+    const { id } = router.query;
 
     function handleOptionSelected(event: any) {
         setFilterTypeSelected(event.target.value);
@@ -132,7 +137,7 @@ export default function MyAnnouncement() {
                             mt={10}
                         >
                             {products.map((product) => (
-                                <Link href={`/users/products/${product.id}`} key={product.id}>
+                                <Link href={`/adsdetails/${id}`} key={product.id}>
                                     <Product
                                         product_images={product.product_images}
                                         name={product.name}
