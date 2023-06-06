@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Flex, Heading, Divider, VStack, SimpleGrid, HStack, Text, Button, Radio, RadioGroup,
    Switch, Image, useTheme, Checkbox, CheckboxGroup, Stack, FormControl
 } from "@chakra-ui/react";
@@ -21,6 +21,9 @@ import Link from 'next/link'
 import Dropzone from "../../components/Dropzone";
 import { storageAdsSave } from "../../storage/storageAds";
 import { ButtonDefault } from "../../components/Button";
+import { api } from "../../services/api";
+
+import {useRouter} from 'next/router';
   
 export default function EditAds() {
 
@@ -42,7 +45,47 @@ export default function EditAds() {
     const [images, setImages] = useState<string[]>([]); 
     const [statusProduto, setStatusProduto] = useState<string | undefined>(undefined);
     const [switchValue, setSwitchValue] = useState(false);
-    const [paymentMethods, setPaymentMethods] = useState<string[]>([])
+
+    const [name, setName] = useState()
+    const [description, setDescription] = useState()
+    const [isNew, setIsNew] = useState <string | undefined> (undefined);
+    const [price, setPrice] = useState()
+    const [isTradable, setIsTradable] = useState()
+    const [paymentMethods, setPaymentMethods] = useState([]) 
+
+    const router = useRouter();
+    const { id } = router.query;
+
+    async function fetchGetProductDetails() {
+        try {
+            setIsLoading(true);
+            const response = await api.get(`/products/${id}`);
+
+            // setImages(response.data.images)
+            setName(response.data.name);
+            setDescription(response.data.description);
+            setIsNew(response.data.is_new);
+            setPrice(response.data.price);
+            setIsTradable(response.data.isTradable);
+            setPaymentMethods(response.data.payment_methods)
+        
+        } catch (error) {
+            const title = 'Não foi possível carregar os detalhes do produto';        
+            toast.error( title, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+    
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     function RadioStatusProduct(){
         return (
@@ -160,8 +203,8 @@ export default function EditAds() {
                 images: images
             }
             
-            await storageAdsSave(data);
-            console.log( 'TESTANDO AS 13:43 =>', data)
+            // await storageAdsSave(data);
+            // console.log( 'TESTANDO AS 13:43 =>', data)
             // setIsLoading(false)
             // handleOpenPreview();      
                   
@@ -180,6 +223,10 @@ export default function EditAds() {
             });
         }        
     }
+
+    useEffect(() => {
+        fetchGetProductDetails();
+    },[id])
     
     return (
 
@@ -285,6 +332,8 @@ export default function EditAds() {
                                     placeholder='Título do seu anúncio'
                                     name='name'
                                     type={'text'}
+                                    // onChangeText={() => setName}
+                                    // value={name} 
                                     error={errors.name}
                                     register={register}
                                     options={{

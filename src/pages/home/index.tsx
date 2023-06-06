@@ -51,7 +51,7 @@ export default function Home() {
   }
 
   function handleProductDetails(product_id: string) {
-    // navigation.navigate('productdetails', {product_id});
+    // router.push('productdetails', {product_id});
   }
 
   function handleGoNewAnnouncement(){

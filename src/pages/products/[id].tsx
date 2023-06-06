@@ -97,7 +97,7 @@ export default function ProductDetails() {
                   bg="blue.500" 
                   src={"https://github.com/carloshenriquefarias.png"}>
                 </Avatar>
-                <Text color="gray.600" fontWeight="bold">Xeeeeeee</Text>
+                <Text color="gray.600" fontWeight="bold">{user.name}</Text>
               </HStack>
 
               <Button

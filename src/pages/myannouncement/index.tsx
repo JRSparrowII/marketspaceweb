@@ -40,6 +40,11 @@ export default function MyAnnouncement() {
         setFilterTypeSelected(event.target.value);
     }
 
+    function handleProductDetails(id: string) {
+        // navigation.navigate('myadsdetails', {userProduct_id});
+        router.push(`/adsdetails, ${id}`);
+    } 
+
     async function fetchMyAds() {       
         try {
           const response = await api.get('/users/products');
@@ -137,7 +142,7 @@ export default function MyAnnouncement() {
                             mt={10}
                         >
                             {products.map((product) => (
-                                <Link href={`/adsdetails/${id}`} key={product.id}>
+                                <Link href={`/adsdetails/${product.id}`} key={product.id}>
                                     <Product
                                         product_images={product.product_images}
                                         name={product.name}
