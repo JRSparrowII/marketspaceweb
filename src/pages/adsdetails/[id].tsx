@@ -35,6 +35,7 @@ import { AppError } from '../../utils/AppError';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../../hooks/useAuth';
 
 
 // export async function getServerSideProps(context) {
@@ -69,19 +70,18 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function MyProductDetails() {
 
-  // const router = useRouter()
-  // const MyProductDetailsID = router.query.myProductDetailsID
-
   const { colors, sizes } = useTheme();
   const { isOpen, onOpen, onClose } = useDisclosure()
   const cancelRef = React.useRef()
-  const [selectedButton, setSelectedButton] = useState("ativado");
-  const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
+  // const [selectedButton, setSelectedButton] = useState("ativado");
+  // const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
   const [product, setProduct] = useState<ProductDetailsDTO>({} as ProductDetailsDTO); 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const router = useRouter();
   const { id } = router.query;
+
+  const { user } = useAuth();
 
   const methodIcons: { [key: string]: React.ComponentType<IconBaseProps> } = {
     boleto: RiBarcodeLine,
@@ -95,24 +95,16 @@ export default function MyProductDetails() {
     router.push(`/myannouncement`);
   };
 
-  // function EditMyAd(){
-  //   <Link href={`/myannouncement/${MyProductDetailsID}/editMyAds/1`}></Link>
-  // }
-
-  function DisableAd(){
-
-  }
-
-  function RemoveAd(){
-    
-  }
+  function GoEdit(id: string) {
+    router.push(`/editads/${id}`);
+  }  
 
   async function fetchProductDetails() {       
     try {
+
       const response = await api.get(`/products/${id}`);
-      // const response = await api.get('/products/7f24effe-e0fb-4e4f-b9d3-4d87bea80583');
       setProduct(response.data);
-      // console.log('aqui as 11:36 =>', response.data);
+      // console.log('aqui as 14:58 =>', response.data);
       // setLoading(false); 
 
     } catch (error) {
@@ -132,35 +124,100 @@ export default function MyProductDetails() {
     }
   }   
 
+  async function handleAdsEnabledOrDisabled() {
+    try {
+      // setIsUpdating(true)
+      // console.log('MOSTRE AQUI OS DADOS 15:21')
+            
+      const data = {
+        is_active : !product.is_active
+      }
+  
+      await api.patch(`/products/${id}`, data)
+
+      // console.log('MOSTRE AQUI OS DADOS 15:21', data)
+
+      const title = !product.is_active ? 'Seu anúncio está ativado!' : 'Seu anúncio está desativado!';
+
+      toast.success( title, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      // handleOpenMyAds();
+
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível desabilitar seu produto';
+  
+      toast.error( title, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+    } finally {
+      // setIsUpdating(false)
+    }
+  }
+
+  async function handleDeleteAds(userProduct_id: string) {
+    try {
+      // setIsDeleting(true)
+  
+      await api.delete(`/products/${userProduct_id}`)     
+
+      const alert = 'Seu anúncio foi excluído com sucesso!';
+
+      toast.success( alert, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+      handleGoMyAnnouncement()
+
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : 'Não foi possível excluir o aunúncio! Tente mais tarde!';
+
+      toast.error( title, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+
+    } finally {
+      // setIsDeleting(false)
+    }
+  }
+
   useEffect(() => {
     fetchProductDetails()
   },[product.id])
 
-  async function fetchAds() {
-       
-      try {
-          const adLoad = await storageAdsGet();
-          setAds(adLoad);
-      
-      }   catch (error) {
-
-          // const isAppError = error instanceof AppError;
-          // const title = isAppError ? error.message : 'Não foi possível carregar os produtos';
-      
-          // toast.show({
-          //     title,
-          //     placement: 'top',
-          //     bgColor: 'red.500'
-          // })
-      }
-  }
-
-  useEffect(() => {
-      fetchAds()
-  }, []);  
-
   return (
-    // <h1>E la vamos nos Product 16337: {JSON.stringify(query)}</h1>
     <Flex direction="column" height="100vh"> 
         <Header/>   
         
@@ -191,7 +248,7 @@ export default function MyProductDetails() {
                   icon={<RiPencilLine color={colors.gray[700]} size={sizes[5]}/>}
                   variant="default"
                   size="small"
-                  onClick={DisableAd}
+                  onClick={GoEdit}
                   isLoading={isLoading}
                 />
               </HStack>
@@ -205,16 +262,16 @@ export default function MyProductDetails() {
                   ]}
                 />
                 
-                {/* {!product.is_active &&
+                {!product.is_active &&
                   (
-                    <VStack  h='100%' w='100%' justifyContent='center' alignItems='center' position='absolute' zIndex={1}>
+                    <VStack h='30%' w='48%' justifyContent='center' alignItems='center' position='absolute' zIndex={1}>
                       <Box bg='gray.500' h='100%' w='100%' opacity={0.7} rounded='md'/>
                       <Text fontFamily='heading' fontSize='lg' color='gray.100' position='absolute' zIndex={2}>
                         ANÚNCIO DESATIVADO
                       </Text>
                     </VStack>
                   )
-                } */}
+                }
               </VStack>
 
               <HStack 
@@ -228,7 +285,7 @@ export default function MyProductDetails() {
                   bg="blue.500" 
                   src="https://github.com/carloshenriquepvh@hotmail.com.png">
                 </Avatar>
-                <Text color="gray.600" fontWeight="bold">Carlos Henrique</Text>
+                <Text color="gray.600" fontWeight="bold">{user.name}</Text>
               </HStack>
 
               <Button
@@ -243,7 +300,7 @@ export default function MyProductDetails() {
                 mt={5}
                 cursor="default"
               >
-                HABILITADOS
+                {product.is_new ? 'Novo' : 'Usado'}
               </Button> 
 
               <HStack 
@@ -252,32 +309,37 @@ export default function MyProductDetails() {
                 spacing={2}   
                 mt={5}                                
               >
-                <Text color="gray.600" fontWeight="bold">Cachoeira</Text>
-                <Text color="blue.500" fontWeight="bold">R$ 102,58</Text>
+                <Text color="gray.600" fontWeight="bold">{product.name}</Text>
+                <Text color="blue.500" fontWeight="bold">R$ {product.price}</Text>
               </HStack>
 
-              <Text color="gray.600" mt={5}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere doloribus voluptatem, atque neque officiis libero placeat est molestiae, illum incidunt excepturi blanditiis! Sed, eveniet impedit eum veritatis ipsum accusantium voluptate.</Text>
+              <Text color="gray.600" mt={5}>{product.description}</Text>
 
-              <Text color="gray.600" mt={5}>Aceita troca? Sim!</Text>
+              <Text color="gray.600" mt={5}>Aceita troca? {product.accept_trade ? 'Sim' : 'Não'}</Text>
 
               <Text color="gray.600" fontWeight="bold" mt={5}>Meios de pagamento</Text>
 
-              <VStack
+              <VStack 
                 alignItems="left"
                 justify="flex-start"
                 mt={2}
                 fontSize="sm"
               >
-                {ads?.payment_methods.map(method =>
-                  <HStack alignItems='center' key={method}>
-                    { methodIcons[method] && (
-                      <Icon as={methodIcons[method]} name={method} size={6} color='gray.600' mr={1}/>
-                    )}
-                    <Text fontFamily='body' textTransform='capitalize' fontSize='sm' color='gray.600'>
-                      {method}
-                    </Text>
-                  </HStack>
-                )}   
+                {product.payment_methods && (
+                  product.payment_methods.map(method => {
+                    const IconComponent = methodIcons[method.key]; // Seleciona o ícone correspondente ao método de pagamento atual
+                    return (
+                      <HStack alignItems='center' key={method.key}>
+                        {IconComponent && (
+                          <Icon as={IconComponent} name='cash-multiple' size={4} color='gray.2' mr={2} />
+                        )}
+                        <Text fontFamily='body' textTransform='capitalize' fontSize='sm' color='gray.2'>
+                          {method.name}
+                        </Text>
+                      </HStack>
+                    );
+                  })
+                )}
               </VStack>
 
               <VStack 
@@ -287,11 +349,11 @@ export default function MyProductDetails() {
                 mt={5}                                
               > 
                 <ButtonDefault
-                  title="Desativar Anúncio"
+                  title={!product.is_active ? 'Ativar anúncio' : 'Desativar anúncio'}
                   icon={<BsPower color={colors.gray[200]} size={sizes[5]}/>}
-                  variant="base2"
+                  variant={!product.is_active ? 'base1' : 'base2'}
                   size="total"
-                  onClick={DisableAd}
+                  onClick={handleAdsEnabledOrDisabled}
                   isLoading={isLoading}
                 />
 
@@ -300,12 +362,43 @@ export default function MyProductDetails() {
                   icon={<BsTrash color={colors.gray[700]} size={sizes[5]}/>}
                   variant="default"
                   size="total"
-                  onClick={RemoveAd}
+                  onClick={onOpen}
                   isLoading={isLoading}
                 />    
               </VStack>
             </Flex>
           </SimpleGrid>
+
+          <AlertDialog
+            motionPreset='slideInBottom'
+            leastDestructiveRef={cancelRef}
+            onClose={onClose}
+            isOpen={isOpen}
+            isCentered                
+          >
+            <AlertDialogOverlay />
+
+            <AlertDialogContent>
+              <AlertDialogHeader color="gray.500">ATENÇÃO!!!</AlertDialogHeader>
+              <AlertDialogCloseButton color="gray.700"/>
+
+              <AlertDialogBody color="gray.500" fontWeight="bold">
+                Você tem certeza que deseja REALMENTE EXCLUIR este anúncio?
+              </AlertDialogBody>
+
+              <AlertDialogFooter>
+                <Button colorScheme='red' ref={cancelRef} onClick={onClose}>
+                  Não, Volte!
+                </Button>
+                
+                <Button colorScheme='whatsapp' ml={3} onClick={handleDeleteAds}>
+                  Sim, Tenho certeza!
+                </Button>                
+              </AlertDialogFooter>
+
+            </AlertDialogContent>
+          </AlertDialog>      
+            
           <ToastContainer/>
         </Flex>
     </Flex>
