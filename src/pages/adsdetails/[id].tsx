@@ -27,7 +27,7 @@ import { BsFillCreditCardFill, BsBank, BsPower, BsTrash } from "react-icons/bs";
 import { IconBaseProps } from 'react-icons';
 
 import {BsTag, BsArrowRight } from 'react-icons/bs'
-import { storageAdsGet } from '../../storage/storageAds';
+import { storageAdsGet, storageAdsSave } from '../../storage/storageAds';
 import { ProductDetailsDTO } from '../../dtos/ProductDetailsDTO';
 import { ButtonDefault } from '../../components/Button';
 import { api } from '../../services/api';
@@ -104,7 +104,8 @@ export default function MyProductDetails() {
 
       const response = await api.get(`/products/${id}`);
       setProduct(response.data);
-      // console.log('aqui as 14:58 =>', response.data);
+      storageAdsSave(response.data)
+      console.log('aqui as 18:00 =>', response.data);
       // setLoading(false); 
 
     } catch (error) {

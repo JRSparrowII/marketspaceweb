@@ -19,11 +19,12 @@ import {yupResolver } from "@hookform/resolvers/yup";
 
 import Link from 'next/link'
 import Dropzone from "../../components/Dropzone";
-import { storageAdsSave } from "../../storage/storageAds";
+import { storageAdsGet, storageAdsSave } from "../../storage/storageAds";
 import { ButtonDefault } from "../../components/Button";
 import { api } from "../../services/api";
 
 import {useRouter} from 'next/router';
+import { ADS_STORAGE } from "../../storage/storageConfig";
   
 export default function EditAds() {
 
@@ -46,10 +47,11 @@ export default function EditAds() {
     const [statusProduto, setStatusProduto] = useState<string | undefined>(undefined);
     const [switchValue, setSwitchValue] = useState(false);
 
-    const [name, setName] = useState()
-    const [description, setDescription] = useState()
-    const [isNew, setIsNew] = useState <string | undefined> (undefined);
-    const [price, setPrice] = useState()
+    // const [name, setName] = useState()
+    const [name, setName] = useState<string | undefined>();
+    const [description, setDescription] = useState<string | undefined>();
+    const [isNew, setIsNew] = useState <boolean | undefined> (undefined);
+    const [price, setPrice] = useState<number | undefined>();
     const [isTradable, setIsTradable] = useState()
     const [paymentMethods, setPaymentMethods] = useState([]) 
 
@@ -58,16 +60,19 @@ export default function EditAds() {
 
     async function fetchGetProductDetails() {
         try {
-            setIsLoading(true);
-            const response = await api.get(`/products/${id}`);
 
-            // setImages(response.data.images)
-            setName(response.data.name);
-            setDescription(response.data.description);
-            setIsNew(response.data.is_new);
-            setPrice(response.data.price);
-            setIsTradable(response.data.isTradable);
-            setPaymentMethods(response.data.payment_methods)
+            setIsLoading(true);
+            const response = await storageAdsGet()      
+            // const response = await api.get(`/products/${id}`);
+            console.log('trouxe os dados as 18:22 =>', response?.price)
+
+            // setImages(response.images)
+            setName(response?.name);
+            setDescription(response?.description);
+            // setStatusProduto(response?.is_new);
+            setPrice(response?.price);
+            // setIsTradable(response.data.isTradable);
+            // setPaymentMethods(response.data.payment_methods)
         
         } catch (error) {
             const title = 'Não foi possível carregar os detalhes do produto';        
@@ -332,8 +337,8 @@ export default function EditAds() {
                                     placeholder='Título do seu anúncio'
                                     name='name'
                                     type={'text'}
-                                    // onChangeText={() => setName}
-                                    // value={name} 
+                                    onChangeText={() => setName}
+                                    value={name} 
                                     error={errors.name}
                                     register={register}
                                     options={{
@@ -349,6 +354,8 @@ export default function EditAds() {
                                     placeholder='Descrição do seu anúncio'
                                     name='description'
                                     type={'text'}
+                                    onChangeText={() => setDescription}
+                                    value={description} 
                                     error={errors.description}
                                     register={register}
                                     options={{
@@ -368,6 +375,8 @@ export default function EditAds() {
                                     placeholder='Valor do produto'
                                     name='price'
                                     type={'text'}
+                                    onChangeText={() => setPrice}
+                                    value={price}
                                     error={errors.price}
                                     register={register}
                                     options={{
