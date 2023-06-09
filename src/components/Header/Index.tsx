@@ -1,4 +1,4 @@
-import {Flex, IconButton, useBreakpointValue, Icon} from '@chakra-ui/react'
+import {Flex, IconButton, useBreakpointValue, Icon, HStack, Text, Box} from '@chakra-ui/react'
 import {Profile} from './Profile'
 import {SearchBox} from './SearchBox'
 import {Logo} from './Logos'
@@ -20,12 +20,13 @@ export function Header(){
         <Flex 
             as="header" 
             w="100%" 
-            maxWidth={1250} 
-            h="20" 
+            maxWidth={1950} 
+            h={80} 
             align="center"
             marginX="auto"
-            mt="4"
-            px="6"
+            // mt="4"
+            px="50"
+            bg="blue.100"
         >
 
             {!isWideVersion && (
@@ -42,7 +43,12 @@ export function Header(){
             )}
            
             <Logo/>
-            {/* { isWideVersion && <SearchBox/>} */}
+
+            <Box ml={8} w="80%">
+                { isWideVersion && <SearchBox/>}
+            </Box>
+            
+            
 
             <Flex align="center" ml="auto"> 
                 <NotificationsNav />
