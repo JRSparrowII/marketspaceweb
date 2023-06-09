@@ -24,6 +24,7 @@ import { AppError } from "../../utils/AppError";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CarouselSlider from "../../components/CarouselSlider";
 
 
 
@@ -168,10 +169,10 @@ export default function Home() {
         initial="hidden"
         animate="visible"
       >
-        <SideBar /> 
+        {/* <SideBar />  */}
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'> 
           <MotionFlex direction="column" variants={itemAnimation}>
-            <HStack 
+            {/* <HStack 
               justifyContent="space-between" 
               alignItems="center"   
               spacing={5}                                   
@@ -187,9 +188,17 @@ export default function Home() {
                 onClick={handleGoNewAnnouncement}
               />
             </HStack>
-            <Divider my="2" borderColor="blue.500" ></Divider>
+            <Divider my="2" borderColor="blue.500" ></Divider> */}
 
-            <Box bg="blue.100" mt={5} rounded={5} h={20} w="100%">             
+            <CarouselSlider
+              images={[
+                'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+                'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
+                'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+              ]}
+            />
+
+            {/* <Box bg="blue.100" mt={5} rounded={5} h={20} w="100%">             
               <HStack justifyContent="space-between" alignItems="center" padding={3}>                
                 <HStack 
                   justifyContent="space-between" 
@@ -231,9 +240,9 @@ export default function Home() {
                 </Button>   
 
               </HStack>                    
-            </Box>
+            </Box> */}
 
-            <Text color="gray.500" fontSize="sm" mt={8} mb={4}>
+            <Text color="gray.500" fontSize="sm" mt={4} mb={4}>
                 Compre produtos variados
             </Text>
 
@@ -268,7 +277,7 @@ export default function Home() {
             </InputGroup>
 
             <SimpleGrid 
-              columns={{ sm: 1, md: 2 }} 
+              columns={{ sm: 2, md: 3 }} 
               spacing="4"
               // minChildWidth="380px"
               width="100%"
@@ -283,11 +292,39 @@ export default function Home() {
                     price={product.price}
                     is_new={product.is_new}
                     is_active={product.is_active}
+                    payment_methods={product.payment_methods}
                     // onClick={() => handleProductDetails(product.id)} 
                   />
                 </Link>
               ))}
             </SimpleGrid>
+
+            <Text color="gray.500" fontSize="sm" mt={8} mb={4}>
+                Recomendamos para você
+            </Text>
+
+            {/* <SimpleGrid 
+              columns={{ sm: 2, md: 5 }} 
+              spacing="4"
+              // minChildWidth="380px"
+              width="100%"
+              h='500px'
+              mt={10}
+            >
+              {products.slice(0, 5).map((product) => (    
+                 <Link href={`/products/${product.id}`} key={product.id}>            
+                  <Product
+                    product_images={product.product_images}
+                    name={product.name}
+                    price={product.price}
+                    is_new={product.is_new}
+                    is_active={product.is_active}
+                    payment_methods={product.payment_methods}
+                    // onClick={() => handleProductDetails(product.id)} 
+                  />
+                </Link>
+              ))}
+            </SimpleGrid> */}
 
             <AlertDialog
               motionPreset='slideInBottom'

@@ -5,6 +5,7 @@ import { Carousel } from "react-responsive-carousel";
 
 type Props = {
   images?: string[] 
+  size?:string
 }
 
 const CarouselSlider = ({ images = []} : Props) => {
@@ -30,7 +31,7 @@ const CarouselSlider = ({ images = []} : Props) => {
           return (
             <Box>
                 <Image src={image}
-                height="300px" borderRadius={8}/>
+                height={"350px"} borderRadius={8}/>
             </Box>
           )
         })}   

@@ -42,19 +42,19 @@ export default function EditAds() {
     
     const {errors} = formState
 
-    const [selectedImage, setSelectedImage] = React.useState('');
     const [images, setImages] = useState<string[]>([]); 
-    const [statusProduto, setStatusProduto] = useState<string | undefined>(undefined);
-    const [switchValue, setSwitchValue] = useState(false);
-
-    // const [name, setName] = useState()
+    
     const [name, setName] = useState<string | undefined>();
     const [description, setDescription] = useState<string | undefined>();
-    const [isNew, setIsNew] = useState <boolean | undefined> (undefined);
+    const [statusProduto, setStatusProduto] = useState<string | undefined>();
     const [price, setPrice] = useState<number | undefined>();
-    const [isTradable, setIsTradable] = useState()
-    const [paymentMethods, setPaymentMethods] = useState([]) 
+    const [switchValue, setSwitchValue] = useState <boolean | undefined> (false);
+    const [isTradable, setIsTradable] = useState <boolean | undefined> (undefined);
 
+    // const paymentMethodsData = localStorage.getItem('payment_methods'); 
+        // const [isNew, setIsNew] = useState <boolean | undefined> (undefined);
+    const [paymentMethods, setPaymentMethods] = useState<string[]>([]);
+    
     const router = useRouter();
     const { id } = router.query;
 
@@ -64,15 +64,24 @@ export default function EditAds() {
             setIsLoading(true);
             const response = await storageAdsGet()      
             // const response = await api.get(`/products/${id}`);
-            console.log('trouxe os dados as 18:22 =>', response?.price)
+            console.log('trouxe os dados as 14:57 =>', response)
+
+            const convertStatusProdutoToString = (status: boolean): string => {
+                if (response?.is_new) {
+                  return "new";
+                } else {
+                  return "used";
+                }
+            };
 
             // setImages(response.images)
             setName(response?.name);
             setDescription(response?.description);
-            // setStatusProduto(response?.is_new);
+            setStatusProduto(convertStatusProdutoToString);
             setPrice(response?.price);
-            // setIsTradable(response.data.isTradable);
-            // setPaymentMethods(response.data.payment_methods)
+            setSwitchValue(response?.accept_trade);
+            // setPaymentMethods(response?.payment_methods)
+            setPaymentMethods(response?.payment_methods || []);
         
         } catch (error) {
             const title = 'Não foi possível carregar os detalhes do produto';        

@@ -1,4 +1,4 @@
-import { Text, HStack, VStack, Image, Avatar, Box, Button} from '@chakra-ui/react';
+import { Text, HStack, VStack, Image, Avatar, Box, Button, Stack} from '@chakra-ui/react';
 import { useState } from 'react';
 import { Status } from './Status';
 import { ProductDTO } from '../dtos/ProductDTO'
@@ -11,7 +11,7 @@ import Link from 'next/link';
 //     data: ProductDTO;
 //   };
 
-export function Product({onClick, product_images, is_new, is_active, user, name, price, ...rest}: ProductDTO){
+export function Product({onClick, product_images, payment_methods, is_new, is_active, user, name, price, ...rest}: ProductDTO){
 
     const [userPhoto, setUserPhoto] = useState('https://github.com/JRSparrowII.png');
     const [product, setProduct] = useState<ProductDTO>({} as ProductDTO);
@@ -20,7 +20,7 @@ export function Product({onClick, product_images, is_new, is_active, user, name,
         <MotionFlex variants={animationFlex}>
             {/* <Link href={`/product/${product.id}`} key={product.id}> */}
                 <Button w="100%" h="100%" borderRadius={10} _hover={{ bg: 'gray.100'}} as="a">
-                    <Box w="100%" h="100%" borderRadius={10}>
+                    <Stack w="100%" h="100%" borderRadius={10} spacing={2} mb={2}> 
                         {/* <Button></Button> */}
                         <VStack>
                             <Box position="relative" w="100%" h="100%">
@@ -61,22 +61,26 @@ export function Product({onClick, product_images, is_new, is_active, user, name,
                             </Box>
                         </VStack>
 
-                        <Text mt={2} fontSize='sm' color='gray.500' textAlign='left'>{name}</Text> 
+                        <Text mt={2} fontWeight="thin" fontSize='sm' color='gray.500' textAlign='center'>{name}</Text> 
 
                         <HStack 
-                            justifyContent="flex-start" 
+                            justifyContent="center" 
                             bgColor="transparent" 
-                            // space={1}
+                            spacing={1}
                         >
-                            <Text fontWeight="bold" fontSize='sm' color='gray.500' textAlign='left'>
+                            <Text  fontSize='lg' color='blue.500' textAlign='center'>
                                 R$ 
                             </Text> 
 
-                            <Text fontWeight="bold" fontSize='sm' color='gray.500' textAlign='left'>
+                            <Text  fontSize='lg' color='blue.500' textAlign='center'>
                                 {price} 
-                            </Text>                
+                            </Text> 
                         </HStack> 
-                    </Box>
+
+                        <Text fontWeight="thin" fontSize='sm' color='gray.500' textAlign='center'>
+                            Pagamento disponível em: Boleto/pix 
+                        </Text> 
+                    </Stack>
                 </Button>
             {/* </Link> */}
         </MotionFlex>
