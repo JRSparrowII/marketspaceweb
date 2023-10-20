@@ -1,6 +1,6 @@
 import {Flex, Text, Box, Avatar, Button, useDisclosure,
     AlertDialog, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, 
-    AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter,} from '@chakra-ui/react'
+    AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, HStack,} from '@chakra-ui/react'
 import React from "react";
 import Link from 'next/link'
 
@@ -21,8 +21,12 @@ export function Profile({showProfileData = true}:ProfileProps){
         <Flex align="center"> 
             {showProfileData && (
                 <Box mr="4" textAlign="right">
-                    <Text color="blue.700" fontWeight="bold">{user.name}</Text>
-                    <Text color="blue.500" fontSize="small">
+                    <HStack>
+                    <Text color="blue.100" fontWeight="bold">Welcome</Text>
+                    <Text color="blue.100" fontWeight="bold">{user.name}</Text>
+                    </HStack>
+                    
+                    <Text color="blue.100" fontSize="small">
                         {user.email}
                     </Text>
                 </Box>                
@@ -31,11 +35,11 @@ export function Profile({showProfileData = true}:ProfileProps){
             <Avatar     //IMAGEM DO USUARIO
                 size="md" 
                 name={user.name}
-                bg="blue.500" 
+                bg="blue.100" 
                 src="https://github.com/carloshenriquepvh@hotmail.com.png">
             </Avatar>
 
-            <Button bg="blue.100" color="blue.500" onClick={onOpen}>
+            <Button bg="transparent" color="blue.100" onClick={onOpen} _hover={{color: 'yellow'}}>
                 Sair
             </Button>
 
