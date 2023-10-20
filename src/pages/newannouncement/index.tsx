@@ -222,9 +222,9 @@ export default function NewAnnouncement() {
                         
                         <HStack position="relative" w="100%" h="100%" mt={5}>
 
-                            <Box position="relative" w="80%" h="150px">
+                            {/* <Box position="relative" w="80%" h="150px">
                                 <Dropzone onFileUploaded={setImages} />
-                            </Box>
+                            </Box> */}
 
                             {/* {images.length > 0 && (
                                 <>
