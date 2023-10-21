@@ -10,7 +10,7 @@ export default function InfoCard() {
       width="100%"
       h='auto'
       // bg={'red'}
-      // mt={10}
+      mt={5}
       gap={5}
       justifyContent={'center'}
       alignItems={'center'}
@@ -23,7 +23,7 @@ export default function InfoCard() {
           h={'200px'}
           w={'full'}
           src={
-            'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+            'https://plus.unsplash.com/premium_photo-1661301082075-c78960f2b979?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fENBUkQlMjBDUkVESVR8ZW58MHx8MHx8fDA%3D'
           }
           objectFit={'cover'}
         // borderRadius={10}
@@ -41,7 +41,7 @@ export default function InfoCard() {
             h={'200px'}
             w={'full'}
             src={
-              'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+              'https://plus.unsplash.com/premium_photo-1681760172394-1c13fc445fd4?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjE3fHxDQVJEJTIwQ1JFRElUfGVufDB8fDB8fHww'
             }
             objectFit={'cover'}
           // borderRadius={10}
@@ -59,9 +59,9 @@ export default function InfoCard() {
           h={'200px'}
           w={'full'}
           src={
-            'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+            'https://plus.unsplash.com/premium_photo-1661779007328-ee926ba0b3dd?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDF8fENBUkQlMjBDUkVESVR8ZW58MHx8MHx8fDA%3D'
           }
-          objectFit={'cover'}
+          objectFit={'fill'}
         // borderRadius={10}
         />
         <Text textAlign={'left'} fontWeight={'bold'} color="blue.500" fontSize="sm" mt={1} mb={1}>

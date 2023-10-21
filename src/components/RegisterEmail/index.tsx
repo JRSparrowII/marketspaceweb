@@ -1,4 +1,4 @@
-import { Box, FormControl, Input, InputGroup, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Button, Center, FormControl, HStack, Input, InputGroup, SimpleGrid, Text } from "@chakra-ui/react";
 import { ButtonDefault } from "../Button";
 
 export default function RegisterEmail() {
@@ -7,54 +7,23 @@ export default function RegisterEmail() {
 
   }
   return (
-    // <Box bg={'blue'} w={'full'} justifyContent={'center'} alignItems={'center'}>
-
-    <SimpleGrid
-      columns={{ sm: 2, md: 4 }}
-      spacing="4"
-      minChildWidth="380px"
-      // maxWidth={1480}
+    <Center>
+      <SimpleGrid
+      columns={[1, 4]}
+      spacing={4}
       width="100%"
-      h='auto'
-      gap={5}
-      px={'10'}
-      spacingX={5}
-      bg={'blue.500'}
-      justifyContent='center' // Centraliza horizontalmente
-      alignItems='center' // Centraliza verticalmente
-      flexDirection='row' // Define a direção como horizontal (row)
+      maxWidth={1480} 
+      mt={5}
     >
-      <Box pt={2}>
-        <Text color="gray.100" fontSize="md" mb={3} fontFamily="body" mt={1}>
-          Marketspace news
-        </Text>
-        <Text color="gray.100" fontSize="md" mb={3} fontFamily="body" mt={1}>
-          Receba nossas ofertas no email
-        </Text>
-      </Box>
-
-      <FormControl>
-        <Input
-          placeholder='Email'
-          name='email'
-          type={'email'}
-        />
-      </FormControl>
-
-      <InputGroup size={['md']}>
-        <Input
-          placeholder='Senha'
-          name='password'
-        />
-      </InputGroup>
-
-      <ButtonDefault
-        title="Entrar"
-        size="total"
-        variant="default"
-        onClick={(handleSignIn)}
-      />
+      <Text fontSize="md" mt={2} fontWeight={'bold'}>
+        Do you want to receive wounderful offers? Sign In
+      </Text>
+      <Input placeholder="your name" />
+      <Input placeholder="your email" />
+      <Button colorScheme="blackAlpha">
+        Get Notifications
+      </Button>
     </SimpleGrid>
-    // </Box>
+    </Center>
   )
 }

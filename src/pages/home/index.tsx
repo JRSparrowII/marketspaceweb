@@ -2,37 +2,31 @@ import {
   Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Button,
   InputGroup, InputRightElement, Input, useDisclosure, Switch, Image,
   AlertDialog, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, useTheme,
-  AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox, CheckboxGroup, Spacer
+  AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox, CheckboxGroup, Spacer, Stack, Center
 } from "@chakra-ui/react";
-// import { Header } from "../../components/Header/Index";
-// import { SideBar } from "../../components/Sidebar/index";
-// import { NewSearchBar } from "../../components/NewSearchBar/index";
-import React, { useEffect, useState } from "react";
-// import { Input } from "../../components/Form/Input";
-import { RiAddLine, RiPencilLine, RiSearchLine, RiFilter2Line, RiSoundModuleFill } from 'react-icons/ri'
-import { BsTag, BsArrowRight, BsPlusCircle } from 'react-icons/bs'
-import Link from 'next/link'
-import { Header } from "../../components/Header/Index";
-import { SideBar } from "../../components/Sidebar";
-import { Product } from "../../components/Product";
 
-import { FiLogIn } from "react-icons/fi";
-import { MotionFlex, animationFlex, itemAnimation } from '../../styles/animation';
-import { ButtonDefault } from "../../components/Button";
+import React, { useEffect, useState } from "react";
+
+import Link from 'next/link'
 import { useRouter } from 'next/router';
+
+import { MotionFlex, animationFlex, itemAnimation } from '../../styles/animation';
+
 import { api } from "../../services/api";
 import { ProductDTO } from "../../dtos/ProductDTO";
 import { AppError } from "../../utils/AppError";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import NewHeader from "../../components/NewHeader";
+import { Product } from "../../components/Product";
 import CarouselSlider from "../../components/CarouselSlider";
 import Footer from "../../components/Footer";
 import RegisterEmail from "../../components/RegisterEmail";
 import InfoCard from "../../components/InfoCard";
-
-
+import { MdDoubleArrow } from "react-icons/md";
+import DividerTitle from "../../components/DividerTitle";
 
 export default function Home() {
 
@@ -45,7 +39,6 @@ export default function Home() {
   const router = useRouter();
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [filterName, setFilterName] = useState('')
-
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -157,10 +150,8 @@ export default function Home() {
   }, [])
 
   return (
-
     <Flex direction="column" height="100vh">
       <NewHeader />
-
       <Box
         w={{ base: "100%", md: "70%" }}
         maxWidth={1480}
@@ -181,24 +172,7 @@ export default function Home() {
         />
       </Box>
 
-      <Box
-        w={{ base: "100%", md: "70%" }}
-        maxWidth={1480}
-        mx="auto"
-        h="60px"
-        bg="blue.500"
-        justifyContent={'center'}
-        alignItems={'center'}
-        mt={5}
-      >
-        <Text textAlign={'center'} color={'blue.100'}> More products offered for you</Text>
-        {/* <HStack mt={1} bg={'blue.500'} maxWidth={1480} mx="auto" justifyContent={'center'} alignItems={'center'} h={40} w={{ base: "100%", md: "70%" }} >
-            <RiSearchLine color={colors.blue[500]} size={sizes[5]} />
-            <Text color={'blue.100'}> More products offered for you</Text>
-            <RiSoundModuleFill color={colors.blue[500]} size={sizes[5]} />
-          </HStack> */}
-      </Box>
-
+      <DividerTitle title="More incredible products for you"/>
       <MotionFlex
         width="100%"
         my="6"
@@ -209,93 +183,14 @@ export default function Home() {
         initial="hidden"
         animate="visible"
       >
-        {/* <SideBar />  */}
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'>
-          <MotionFlex direction="column" variants={itemAnimation}>
-            {/* <HStack 
-              justifyContent="space-between" 
-              alignItems="center"   
-              spacing={5}                                   
-            >
-              <Heading size="md" fontWeight="normal" color="blue.500">Produtos anúnciados para venda</Heading>
-              
-              <ButtonDefault
-                title="Criar anúncio"
-                icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
-                variant="base1"
-                // loadingText="Aguarde..."
-                size="small"
-                onClick={handleGoNewAnnouncement}
-              />
-            </HStack>
-            <Divider my="2" borderColor="blue.500" ></Divider> */}
-
-
-
-            {/* <CarouselSlider
-              images={[
-                'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
-                'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
-                'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
-              ]}
-            /> */}
-
-            {/* <Box bg="blue.100" mt={5} rounded={5} h={20} w="100%">             
-              <HStack justifyContent="space-between" alignItems="center" padding={3}>                
-                <HStack 
-                  justifyContent="space-between" 
-                  alignItems="center"   
-                  spacing={5} 
-                  pl={3}                                   
-                >
-                  <BsTag color={colors.blue[700]} size={sizes[7]} />
-                  <VStack ml={4} justifyContent="flex-start" alignItems="left" spacing={1}>
-                    <Text 
-                      color="gray.600" 
-                      fontFamily={'heading'} 
-                      fontSize="xl" 
-                      fontWeight="bold" 
-                      lineHeight={'md'}
-                      textAlign="left"
-                    >
-                      4
-                    </Text>  
-                    <Text color="gray.600" fontSize="sm">Anúncios ativos</Text> 
-                  </VStack>
-                </HStack>
-
-                <Button bg="blue.100" _hover={{ backgroundColor: "blue.100" }} onClick={handleGoMyAnnouncement}>
-                  <HStack 
-                    justifyContent="space-between" 
-                    alignItems="center"                 
-                  >
-                    <Text 
-                      color="blue.500" 
-                      fontFamily={'heading'} 
-                      fontWeight="bold" 
-                      fontSize="sm"
-                    >
-                      Meus anúncios 
-                    </Text>
-                    <BsArrowRight color={colors.blue[500]} size={sizes[5]}/>
-                  </HStack>   
-                </Button>   
-
-              </HStack>                    
-            </Box> */}
-
-            {/* <Text color="gray.500" fontSize="sm" mt={4} mb={4}>
-              Compre produtos variados
-            </Text> */}
-
+          <MotionFlex direction="column" variants={itemAnimation}>            
             <SimpleGrid
               columns={{ sm: 2, md: 4 }}
               spacing="4"
-              // minChildWidth="380px"
               width="100%"
               h='auto'
               bg={'white'}
-            // mt={10}
             >
               {products.map((product) => (
                 <Link href={`/products/${product.id}`} key={product.id}>
@@ -313,12 +208,18 @@ export default function Home() {
               ))}
             </SimpleGrid>
 
-            <Text textAlign={'right'} fontWeight={'bold'} color="blue.500" fontSize="sm" mt={8} mb={4}>
-              See all products
-            </Text>
+            <Link href={`/product/`}>
+              <HStack justifyContent={'flex-end'} alignItems={'center'} mt={5} mb={4}>
+                <Text textAlign={'right'} fontWeight={'bold'} color="yellow.500" fontSize="md" >
+                  See all products
+                </Text>
+                <MdDoubleArrow color={colors.yellow[500]} />
+              </HStack>
+            </Link>
 
-            <InfoCard/>
-           
+            <DividerTitle title="Join us and live a new experience"/>
+            <InfoCard />
+
             {/* 
             <AlertDialog
               motionPreset='slideInBottom'
@@ -433,8 +334,8 @@ export default function Home() {
         </SimpleGrid>
       </MotionFlex>
 
-      <RegisterEmail/>
-
+      <DividerTitle title="Marketspace News: Receive our offers"/>
+      <RegisterEmail />
       <Footer />
       <ToastContainer />
     </Flex>
