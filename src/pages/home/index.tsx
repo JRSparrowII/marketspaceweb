@@ -1,16 +1,12 @@
-import {
-  Box, Flex, Heading, Icon, Divider, VStack, SimpleGrid, HStack, Text, Button,
-  InputGroup, InputRightElement, Input, useDisclosure, Switch, Image,
-  AlertDialog, AlertDialogOverlay, AlertDialogHeader, AlertDialogContent, useTheme,
-  AlertDialogCloseButton, AlertDialogBody, AlertDialogFooter, Checkbox, CheckboxGroup, Spacer, Stack, Center
-} from "@chakra-ui/react";
+'use client'
 
+import { Box, Flex, SimpleGrid, HStack, Text, useTheme, Stack} from "@chakra-ui/react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MdDoubleArrow } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 
 import Link from 'next/link'
 import { useRouter } from 'next/router';
-
-import { MotionFlex, animationFlex, itemAnimation } from '../../styles/animation';
 
 import { api } from "../../services/api";
 import { ProductDTO } from "../../dtos/ProductDTO";
@@ -20,27 +16,28 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import NewHeader from "../../components/NewHeader";
-import { Product } from "../../components/Product";
 import CarouselSlider from "../../components/CarouselSlider";
 import Footer from "../../components/Footer";
 import RegisterEmail from "../../components/RegisterEmail";
 import InfoCard from "../../components/InfoCard";
-import { MdDoubleArrow } from "react-icons/md";
 import DividerTitle from "../../components/DividerTitle";
+
+import { Product } from "../../components/Product";
+
 
 export default function Home() {
 
-  const { colors, sizes } = useTheme();
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const cancelRef = React.useRef()
-  const [selectedButton, setSelectedButton] = useState("novo");
-  const [paymentMethods, setPaymentMethods] = useState<string[]>([])
-  const [filterNameInput, setFilterNameInput] = useState('');
+  const cancelRef = React.useRef();
   const router = useRouter();
-  const [products, setProducts] = useState<ProductDTO[]>([]);
-  const [filterName, setFilterName] = useState('')
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { colors, sizes } = useTheme();
+
+  const [filterName, setFilterName] = useState('');
+  const [filterNameInput, setFilterNameInput] = useState('');
+  const [paymentMethods, setPaymentMethods] = useState<string[]>([])
+  const [products, setProducts] = useState<ProductDTO[]>([]);
+  const [selectedButton, setSelectedButton] = useState("novo");
 
   function handleLoading() {
     setIsLoading(true);
@@ -152,47 +149,61 @@ export default function Home() {
   return (
     <Flex direction="column" height="100vh">
       <NewHeader />
-      <Box
-        w={{ base: "100%", md: "70%" }}
-        maxWidth={1480}
-        mx="auto"
-        h="100%"
-        bg="white"
-        justifyContent={'center'}
-        alignItems={'center'}
-        mt={1}
-      >
-        <CarouselSlider
-          images={[
-            'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
-            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHByb2R1Y3R8ZW58MHx8MHx8fDA%3D',
-            'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzR8fHByb2R1Y3R8ZW58MHx8MHx8fDA%3D',
-            'https://images.unsplash.com/photo-1513116476489-7635e79feb27?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTF8fHByb2R1Y3R8ZW58MHx8MHx8fDA%3D'
-          ]}
-        />
-      </Box>
 
-      <DividerTitle title="More incredible products for you"/>
-      <MotionFlex
+      <motion.div
+        initial={{ opacity: 0, x: -150 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -150 }}
+        transition={{ duration: 0.8 }}
+      >
+        <Box
+          w={{ base: "100%", md: "70%" }}
+          maxWidth={1480}
+          mx="auto"
+          h="100%"
+          bg="white"
+          justifyContent={'center'}
+          alignItems={'center'}
+          mt={1}
+        >
+          <CarouselSlider
+            images={[
+              'https://img.freepik.com/vetores-gratis/capa-preta-plana-sexta-feira-twitch_23-2149103021.jpg?w=1380&t=st=1697991126~exp=1697991726~hmac=54cd5517d608fce1fcebb88a2b054f292075e9d005ac3a3193d6c55a1a1f5fbc',
+              'https://img.freepik.com/vetores-premium/projeto-de-banner-de-vetor-de-venda-de-halloween-texto-de-venda-de-halloween-com-elementos-sazonais-assustadores-e-assustadores_572293-2535.jpg?w=1380',
+              'https://img.freepik.com/vetores-gratis/letras-de-feliz-dia-das-bruxas-com-morcegos-e-baloes-fantasma_74855-784.jpg?w=1380&t=st=1697990832~exp=1697991432~hmac=8066b661aab59fa40d5a5ac4d11f3890c76c163da3025d06bd8023d3287c049c',
+              'https://img.freepik.com/vetores-premium/black-friday-super-sale-caixas-de-presente-pretas-realistas-com-arco-dourado-fundo-escuro-dourado-e-vermelho_132477-217.jpg?w=1380',
+              'https://img.freepik.com/vetores-gratis/faixa-preta-plana-sexta-feira-twitch_23-2149122298.jpg?w=1380&t=st=1697990347~exp=1697990947~hmac=d089b22e0be7b7e13021d57a38c2b7f97e87392f45a705aca2e44fc6cf029f85',
+              'https://img.freepik.com/vetores-gratis/feliz-natal-banner-design-com-sinos_74855-1004.jpg?w=1380&t=st=1697990944~exp=1697991544~hmac=cd0c9a8b49f341294ceeb5945dde227e0ac67aca249908e8c2f9ef257c5f7f96'
+            ]}
+          />
+        </Box>
+      </motion.div>
+
+      <DividerTitle title="More incredible products for you" />
+
+      <Stack
         width="100%"
         my="6"
         maxWidth={1480}
         mx="auto"
-        // px="6"
-        variants={animationFlex}
-        initial="hidden"
-        animate="visible"
       >
-        <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'>
-          <MotionFlex direction="column" variants={itemAnimation}>            
-            <SimpleGrid
-              columns={{ sm: 2, md: 4 }}
-              spacing="4"
-              width="100%"
-              h='auto'
-              bg={'white'}
-            >
-              {products.map((product) => (
+        <AnimatePresence>
+          <SimpleGrid
+            flex="1"
+            gap="4"
+            minChildWidth="320px"
+            alignItems="flex-start"
+            bg='gray.100'
+            width="100%"
+          >
+            {products.map((product, index) => (
+              <motion.div
+                key={index}
+                initial={{ y: -50 }}
+                animate={{ y: 0 }}
+                exit={{ y: -50 }}
+                transition={{ duration: 0.9, delay: index * 0.1 }}
+              >
                 <Link href={`/products/${product.id}`} key={product.id}>
                   <Product
                     product_images={product.product_images}
@@ -205,137 +216,43 @@ export default function Home() {
                     onClick={() => handleProductDetails(product.id)}
                   />
                 </Link>
-              ))}
-            </SimpleGrid>
+              </motion.div>
+            ))}
+          </SimpleGrid>
+        </AnimatePresence>
 
-            <Link href={`/product/`}>
-              <HStack justifyContent={'flex-end'} alignItems={'center'} mt={5} mb={4}>
-                <Text textAlign={'right'} fontWeight={'bold'} color="yellow.500" fontSize="md" >
-                  See all products
-                </Text>
-                <MdDoubleArrow color={colors.yellow[500]} />
-              </HStack>
-            </Link>
+        <Link href={`/product/`}>
+          <HStack justifyContent={'flex-end'} alignItems={'center'} mt={5} mb={4}>
+            <Text textAlign={'right'} fontWeight={'bold'} color="yellow.500" fontSize="md" >
+              See all products
+            </Text>
+            <MdDoubleArrow color={colors.yellow[500]} />
+          </HStack>
+        </Link>
 
-            <DividerTitle title="Join us and live a new experience"/>
-            <InfoCard />
+        <motion.div
+          initial={{ opacity: 0, x: 150 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 150 }}
+          transition={{ duration: 0.8 }}
+        >
+          <DividerTitle title="Join us and live a new experience" />
+          <InfoCard />
 
-            {/* 
-            <AlertDialog
-              motionPreset='slideInBottom'
-              leastDestructiveRef={cancelRef}
-              onClose={onClose}
-              isOpen={isOpen}
-              isCentered                
-            >
-              <AlertDialogOverlay />
+        </motion.div>
 
-              <AlertDialogContent>
-                <AlertDialogHeader color="gray.500">Filtrar anúncios</AlertDialogHeader>                            
-                <AlertDialogCloseButton color="gray.700"/>
+      </Stack>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -50 }}
+        transition={{ duration: 0.8 }}
+      >
+        <DividerTitle title="Marketspace News: Receive our offers" />
+        <RegisterEmail />
+      </motion.div>
 
-                <AlertDialogBody color="gray.500" fontWeight="bold">
-                  <Text fontFamily='heading' fontSize='sm' color='gray.600' mb={3}>
-                    Condição
-                  </Text>
-
-                  <HStack mb={5}>
-                    <Button
-                      bg="gray.200" 
-                      color={selectedButton === "novo" ? "blue.500" : "gray.400"}
-                      border={selectedButton === "novo" ? "2px solid" : "0px solid"} 
-                      _hover={{ backgroundColor: "gray.300" }}                                              
-                      fontSize="sm" 
-                      justifyContent="center"
-                      alignItems="center"
-                      borderRadius={20}
-                      onClick={() => handleFilterEnabled()} 
-                    >
-                      Novo
-                    </Button> 
-
-                    <Button
-                      bg="gray.200" 
-                      color={selectedButton === "usado" ? "blue.500" : "gray.400"}
-                      border={selectedButton === "usado" ? "2px solid" : "0px solid"}  
-                      _hover={{ backgroundColor: "gray.300" }}                                            
-                      fontSize="sm" 
-                      justifyContent="center"
-                      alignItems="center"
-                      borderRadius={20}
-                      onClick={() => handleFilterDisabled()} 
-                    >
-                      Usado
-                    </Button> 
-                  </HStack>    
-
-                  <Text fontFamily='heading' fontSize='sm' color='gray.600' mb={1}>
-                    Aceita troca?
-                  </Text>
-
-                  <Switch
-                    // isChecked={isBannerVisible}
-                    // onChange={handleSwitchChange}
-                    size="lg"
-                    colorScheme="blue"
-                    id='email-alerts'
-                  />
-
-                  <Text fontFamily='heading' fontSize='sm' color='gray.600' mb={3} mt={5}>
-                    Métodos de Pagamentos Aceitos:
-                  </Text>
-
-                  <CheckboxGroup 
-                    colorScheme='blue' 
-                    onChange={setPaymentMethods} 
-                    value={paymentMethods} 
-                    accessibilityLabel="choose numbers"
-                  >
-                    <VStack spacing={[1, 2]} direction={['column']} alignItems="left" justify="flex-start" mt={3}>
-                      <Checkbox value='boleto' color="gray.500" size='sm'>Boleto</Checkbox>
-                      <Checkbox value='pix'color="gray.500" size='sm'>Pix</Checkbox>
-                      <Checkbox value='cash' color="gray.500" size='sm'>Dinheiro</Checkbox>
-                      <Checkbox value='card' color="gray.500" size='sm'>Cartão Crédito</Checkbox>
-                      <Checkbox value='deposit' color="gray.500" size='sm'>Depósito Bancário</Checkbox>
-                    </VStack>
-                  </CheckboxGroup>
-                </AlertDialogBody>
-
-                <AlertDialogFooter>
-                  <HStack justifyContent='space-between' w='100%'>
-                    <Button 
-                      bg='gray.200' 
-                      // ref={cancelRef} 
-                      onClick={onClose} 
-                      w="48%"
-                      fontSize='sm'
-                      _hover={{ backgroundColor: "gray.300" }}
-                    >
-                      Resetar Filtros
-                    </Button>
-
-                    <Button 
-                      bg='gray.700' 
-                      color="gray.200" 
-                      // ref={cancelRef} 
-                      onClick={handleFilterProducts} 
-                      w="48%"
-                      fontSize='sm'
-                      _hover={{ backgroundColor: "gray.400" }}
-                    >
-                      Aplicar Filtros
-                    </Button>
-                  </HStack>
-                </AlertDialogFooter>
-
-              </AlertDialogContent>
-            </AlertDialog>  */}
-          </MotionFlex>
-        </SimpleGrid>
-      </MotionFlex>
-
-      <DividerTitle title="Marketspace News: Receive our offers"/>
-      <RegisterEmail />
       <Footer />
       <ToastContainer />
     </Flex>

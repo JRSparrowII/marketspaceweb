@@ -1,3 +1,4 @@
+'use client'
 import { Box, Divider, Flex, HStack, Input, InputGroup, InputRightElement, Text, VStack, useBreakpointValue, useDisclosure, useTheme } from '@chakra-ui/react'
 // import { SearchBox } from './SearchBox'
 // import { Logo } from './Logo';
@@ -17,6 +18,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { NotificationsNav } from '../Header/NotificationsNav';
 import { Profile } from '../Header/Profile';
+import { motion } from 'framer-motion';
 
 export default function Header() {
 
@@ -36,7 +38,6 @@ export default function Header() {
       {children}
     </Box>
   );
-
 
   const gradientBackground = 'linear-gradient(135deg, #00102c 0%, #00102c 50%,  #1a4971 60%, #225177 70%, #103153 90%)';
 
@@ -111,7 +112,6 @@ export default function Header() {
           <Profile showProfileData={isWideVersion} />
         </HStack>
 
-
         <Box w="70%" mt={10}>
           <Divider borderColor="gray.400"></Divider>
         </Box>
@@ -121,6 +121,7 @@ export default function Header() {
             <Menu color='gray.100' />
           </HStack>
         )}
+
       </VStack>
     </Flex>
   )

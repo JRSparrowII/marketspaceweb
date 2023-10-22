@@ -44,10 +44,10 @@ export function Product({ onClick, product_images, payment_methods, is_new, is_a
     return (
         <MotionFlex variants={animationFlex}>
             {/* <Link href={`/product/${product.id}`} key={product.id}> */}
-            <Stack w="100%" h="100%" bg={'white'} as="a" borderWidth={"1px"} borderColor={"gray.200"} borderRadius={10}>
-                <Stack w="100%" h="100%" spacing={2} bg={'white'} pb={3}>
+            <Stack  _hover={{ boxShadow: "0 0 0 3px orange" }} w="100%" h="100%" bg={'white'} as="a" borderWidth={"1px"} borderColor={"gray.200"} borderRadius={10}>
+                <Stack w="100%" h="100%" spacing={2} bg={'white'} pb={3} borderRadius={10}>
                     <VStack>
-                        <Box position="relative" w="100%" h="100%">
+                        <Box position="relative" w="100%" h="100%" borderRadius={10}>
                             <Image
                                 h={'200px'}
                                 w={'full'}
@@ -55,7 +55,7 @@ export function Product({ onClick, product_images, payment_methods, is_new, is_a
                                     'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
                                 }
                                 objectFit={'cover'}
-                            // borderRadius={10}
+                                borderRadius={10}
                             />
 
                             <HStack
@@ -75,7 +75,7 @@ export function Product({ onClick, product_images, payment_methods, is_new, is_a
                         </Box>
                     </VStack>
 
-                    <Stack px={2} justifyContent={'flex-start'}>
+                    <Stack px={2} justifyContent={'flex-start'} borderRadius={10}>
 
                         <Text mt={2} fontWeight="thin" fontSize='lg' color='gray.500' textAlign='left'>{name}</Text>
 
