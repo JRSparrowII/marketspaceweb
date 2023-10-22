@@ -26,6 +26,10 @@ import { useRouter } from 'next/router';
 import NewHeader from "../../components/NewHeader";
 import { ButtonDefault } from "../../components/Button";
 import Gallery from "../../components/Gallery";
+import ModalEmail from "../../components/ModalEmail";
+
+import { IoLogoWhatsapp } from "react-icons/io";
+import { TfiEmail} from "react-icons/tfi";
 
 export default function ProductDetails() {
 
@@ -46,6 +50,22 @@ export default function ProductDetails() {
     card: BsFillCreditCardFill,
     deposit: BsBank
   };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    function openWhatsApp() {
+        const phoneNumber = '1234567890';
+        const whatsappLink = `https://wa.me/${phoneNumber}`;
+        window.open(whatsappLink, '_blank');
+    }
+
 
   async function fetchProductDetails() {
     try {
@@ -224,22 +244,19 @@ export default function ProductDetails() {
                     mt={5}
 
                   >
-                    <ButtonDefault
-                      title="Fale com vendedor"
-                      icon={<BsTrash color={colors.gray[100]} size={sizes[5]} />}
-                      variant="base1"
-                      size="half"
-                      onClick={onOpen}
-                      isLoading={isLoading}
-                    />
-                    <ButtonDefault
-                      title="Fale com vendedor"
-                      icon={<BsTrash color={colors.gray[100]} size={sizes[5]} />}
-                      variant="base1"
-                      size="half"
-                      onClick={onOpen}
-                      isLoading={isLoading}
-                    />
+                    <Button colorScheme='facebook' size={'md'} w='50%' gap={2} onClick={openModal} isLoading={isLoading}>
+                    <Icon as={TfiEmail} />
+                    <Text>Send a Email</Text>                    
+                </Button>
+
+                {isModalOpen && (
+                    <ModalEmail isOpen={isModalOpen} onClose={closeModal} />
+                )}
+
+                <Button colorScheme="green" size={'md'} w='50%' gap={2} onClick={openWhatsApp} isLoading={isLoading}>
+                    <Icon as={IoLogoWhatsapp} />
+                    <Text>Whatsapp</Text>                   
+                </Button>
                   </HStack>
                 </VStack>,
                 </Center>

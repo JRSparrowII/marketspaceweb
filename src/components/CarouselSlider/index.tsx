@@ -2,7 +2,6 @@ import { Box, Flex, Image } from "@chakra-ui/react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 
-
 type Props = {
   images?: string[]
   size?: string
@@ -10,12 +9,9 @@ type Props = {
 
 const CarouselSlider = ({ images = [] }: Props) => {
   return (
-
     <Flex
       direction="column"
-      // mb={8}
       justifyContent="center"
-    // borderRadius={8}
     >
       {images.length > 0 ? (
         <Carousel
@@ -39,7 +35,6 @@ const CarouselSlider = ({ images = [] }: Props) => {
             )
           })}
         </Carousel>
-
       ) : (
         null
       )}
