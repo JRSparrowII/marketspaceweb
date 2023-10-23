@@ -40,6 +40,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../../hooks/useAuth';
 import NewHeader from '../../components/NewHeader';
 import Gallery from '../../components/Gallery';
+import { CgFileDocument } from 'react-icons/cg';
+import ModalEdit from '../../components/ModalEdit';
 
 
 // export async function getServerSideProps(context) {
@@ -80,7 +82,10 @@ export default function MyProductDetails() {
   // const [selectedButton, setSelectedButton] = useState("ativado");
   // const [ads, setAds] = useState<AdsDTO | undefined>(undefined);
   const [product, setProduct] = useState<ProductDetailsDTO>({} as ProductDetailsDTO);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingActiveAd, setIsLoadingActiveAd] = useState<boolean>(false);
+  const [isLoadingDeleteAd, setIsLoadingDeleteAd] = useState<boolean>(false);
+  const [isLoadingEditAd, setIsLoadingEditAd] = useState<boolean>(false);
+  const [modalAberto, setModalAberto] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
@@ -93,6 +98,14 @@ export default function MyProductDetails() {
     cash: IoMdCash,
     card: BsFillCreditCardFill,
     deposit: BsBank
+  };
+
+  const abrirModal1 = () => {
+    setModalAberto(true);
+  };
+
+  const fecharModal = () => {
+    setModalAberto(false);
   };
 
   // function formatReal(value: number): string {
@@ -119,7 +132,6 @@ export default function MyProductDetails() {
     return value.toLocaleString('pt-BR', options);
   }
 
-
   const FormatNumber = ({ price }: any) => (
     <Text fontSize='3xl' color='blue.500' fontWeight={'bold'} textAlign='left'>
       {formatReal(price)}
@@ -131,7 +143,7 @@ export default function MyProductDetails() {
   };
 
   function GoEdit(id: string) {
-    router.push(`/editads/${id}`);
+    // router.push(`/editads/${id}`);
   }
 
   async function fetchProductDetails() {
@@ -162,19 +174,13 @@ export default function MyProductDetails() {
 
   async function handleAdsEnabledOrDisabled() {
     try {
-      // setIsUpdating(true)
-      // console.log('MOSTRE AQUI OS DADOS 15:21')
-
-      const data = {
-        is_active: !product.is_active
-      }
+      setIsLoadingActiveAd(true)
+      const newStatus = !product.is_active;
+      const data = { is_active: newStatus };
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       await api.patch(`/products/${id}`, data)
-
-      // console.log('MOSTRE AQUI OS DADOS 15:21', data)
-
       const title = !product.is_active ? 'Seu anúncio está ativado!' : 'Seu anúncio está desativado!';
-
       toast.success(title, {
         position: "top-right",
         autoClose: 5000,
@@ -186,7 +192,7 @@ export default function MyProductDetails() {
         theme: "colored",
       });
 
-      // handleOpenMyAds();
+      setProduct((prevProduct) => ({ ...prevProduct, is_active: newStatus }));
 
     } catch (error) {
       const isAppError = error instanceof AppError;
@@ -204,16 +210,16 @@ export default function MyProductDetails() {
       });
 
     } finally {
-      // setIsUpdating(false)
+      setIsLoadingActiveAd(false)
     }
   }
 
   async function handleDeleteAds(userProduct_id: string) {
     try {
-      // setIsDeleting(true)
+      setIsLoadingDeleteAd(true)
 
-      await api.delete(`/products/${userProduct_id}`)
-
+      // await api.delete(`/products/${userProduct_id}`)
+      await new Promise(resolve => setTimeout(resolve, 2000));
       const alert = 'Seu anúncio foi excluído com sucesso!';
 
       toast.success(alert, {
@@ -245,7 +251,7 @@ export default function MyProductDetails() {
       });
 
     } finally {
-      // setIsDeleting(false)
+      setIsLoadingDeleteAd(false)
     }
   }
 
@@ -260,7 +266,15 @@ export default function MyProductDetails() {
       <Flex width="100%" my="6" maxWidth={1480} mx="auto" px="6">
         <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'>
           <Flex direction="column" mb={20}>
-            <Heading size="lg" fontWeight="normal" color="blue.500" >Detalhes do Anúncio</Heading>
+            <HStack 
+                justifyContent="flex-start" 
+                alignItems="center"   
+                spacing={2}                                   
+              >
+                <CgFileDocument color={colors.blue[500]} size={sizes[6]}/>
+                <Heading size="md" fontWeight="normal" color="blue.500" >Detalhes do Anúncio</Heading>
+              </HStack>
+
             <Divider my="2" mb={5} borderColor="blue.500" ></Divider>
 
             <Heading size="md" fontWeight="normal" color="blue.500" mb={5}>{product.name}</Heading>
@@ -276,53 +290,16 @@ export default function MyProductDetails() {
               // px={'10'}
               spacingX={5}
               bg={'white'}
-              justifyContent='center' // Centraliza horizontalmente
-              alignItems='center' // Centraliza verticalmente
-            // flexDirection='row' // Define a direção como horizontal (row)
+              justifyContent='center'
+              alignItems='center' 
             >
-              <VStack h={'550px'} bg={'white'}>
-                {/* <HStack
-                  justifyContent="space-between"
-                  alignItems="center"
-                  spacing={2}
-                  mb={5}
-                >
-                  <ButtonDefault
-                    title="Voltar"
-                    icon={<RiArrowLeftLine color={colors.gray[700]} size={sizes[5]} />}
-                    variant="default"
-                    size="small"
-                    onClick={handleGoMyAnnouncement}
-                    isLoading={isLoading}
-                  />
-
-                  <ButtonDefault
-                    title="Editar"
-                    icon={<RiPencilLine color={colors.gray[700]} size={sizes[5]} />}
-                    variant="default"
-                    size="small"
-                    onClick={GoEdit}
-                    isLoading={isLoading}
-                  />
-
-                  <ButtonDefault
-                    title="Editar"
-                    icon={<RiPencilLine color={colors.gray[700]} size={sizes[5]} />}
-                    variant="default"
-                    size="small"
-                    onClick={GoEdit}
-                    isLoading={isLoading}
-                  />
-                </HStack> */}
+              <VStack h={'550px'} bg={'white'} position={'relative'}> 
                 <Gallery />
-              </VStack>
 
-              <Stack h={'550px'} bg={'white'} px={5} position={'relative'}>
-
-                {/* <VStack>
+                <VStack>
                   {!product.is_active &&
                     (
-                      <VStack h='30%' w='48%' justifyContent='center' alignItems='center' position='absolute' zIndex={1}>
+                      <VStack top={0} h='100%' w='100%' justifyContent='center' alignItems='center' position='absolute' zIndex={1}>
                         <Box bg='gray.500' h='100%' w='100%' opacity={0.7} rounded='md' />
                         <Text fontFamily='heading' fontSize='lg' color='gray.100' position='absolute' zIndex={2}>
                           ANÚNCIO DESATIVADO
@@ -330,8 +307,11 @@ export default function MyProductDetails() {
                       </VStack>
                     )
                   }
-                </VStack> */}
+                </VStack>
 
+              </VStack>
+
+              <Stack h={'550px'} bg={'white'} px={5} position={'relative'}>
                 <HStack
                   justifyContent="flex-start"
                   alignItems="center"
@@ -340,7 +320,7 @@ export default function MyProductDetails() {
                   mb={5}
                 >
                   <Text color="gray.600">
-                    Sell and delivered for:
+                    Vendido e distribuido por:
                     <strong> {user.name}</strong> |
                     <strong color='green'> Avaliable now</strong>
                   </Text>
@@ -426,34 +406,40 @@ export default function MyProductDetails() {
                     title={!product.is_active ? 'Ativar anúncio' : 'Desativar anúncio'}
                     icon={<BsPower color={colors.gray[200]} size={sizes[5]} />}
                     variant={!product.is_active ? 'base1' : 'base2'}
-                    size="total"
+                    size="half"
                     onClick={handleAdsEnabledOrDisabled}
-                    isLoading={isLoading}
+                    isLoading={isLoadingActiveAd}
                   />
 
                   <ButtonDefault
                     title="Excluir Anúncio"
                     icon={<BsTrash color={colors.gray[700]} size={sizes[5]} />}
                     variant="default"
-                    size="total"
+                    size="half"
                     onClick={onOpen}
-                    isLoading={isLoading}
                   />
 
                   <ButtonDefault
-                    title="Excluir Anúncio"
-                    icon={<BsTrash color={colors.gray[700]} size={sizes[5]} />}
+                    title="Editar"
+                    icon={<RiPencilLine color={colors.gray[700]} size={sizes[5]} />}
                     variant="default"
-                    size="total"
-                    onClick={onOpen}
-                    isLoading={isLoading}
+                    size="half"
+                    onClick={abrirModal1}
+                    isLoading={isLoadingEditAd}
                   />
+
+                  {modalAberto === true && (
+                    <div>
+                      <ModalEdit onClose={fecharModal} isOpen={abrirModal1}/>
+                      {/* <button onClick={fecharModal}>Fechar Modal</button> */}
+                    </div>
+                  )}
+
                 </HStack>
               </Stack>
             </SimpleGrid>
-          </Flex>
-        </SimpleGrid>
-        {/*           
+          </Flex> 
+        </SimpleGrid>     
 
           <AlertDialog
             motionPreset='slideInBottom'
@@ -477,13 +463,13 @@ export default function MyProductDetails() {
                   Não, Volte!
                 </Button>
                 
-                <Button colorScheme='whatsapp' ml={3} onClick={handleDeleteAds}>
+                <Button colorScheme='whatsapp' ml={3} onClick={handleDeleteAds} isLoading={isLoadingDeleteAd}>
                   Sim, Tenho certeza!
                 </Button>                
               </AlertDialogFooter>
 
             </AlertDialogContent>
-          </AlertDialog>       */}
+          </AlertDialog>      
 
         <ToastContainer />
       </Flex>

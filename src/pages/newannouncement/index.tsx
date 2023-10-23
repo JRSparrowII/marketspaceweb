@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { Box, Flex, Heading, Divider, VStack, SimpleGrid, HStack, Text, Button, Radio, RadioGroup,
-   Switch, Image, useTheme, Checkbox, CheckboxGroup, Stack, FormControl, Link
+import {
+    Box, Flex, Heading, Divider, VStack, SimpleGrid, HStack, Text, Button, Radio, RadioGroup,
+    Switch, Image, useTheme, Checkbox, CheckboxGroup, Stack, FormControl, Link
 } from "@chakra-ui/react";
 
-import { RxPlus } from 'react-icons/rx'
 import { AdsDTO } from "../../dtos/AdsDTO";
-
-import { Header } from "../../components/Header/Index";
-import { SideBar } from "../../components/Sidebar";
 import { Input } from "../../components/Input";
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -15,16 +12,26 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import * as yup from 'yup'
 import { SubmitHandler, useForm } from "react-hook-form";
-import {yupResolver } from "@hookform/resolvers/yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-// import Link from 'next/link'
 import Dropzone from "../../components/Dropzone";
 import { storageAdsSave } from "../../storage/storageAds";
 import { ButtonDefault } from "../../components/Button";
 
 import { useRouter } from 'next/router';
+import NewHeader from "../../components/NewHeader";
 
-  
+import { Center, UnorderedList, ListItem, IconButton } from "@chakra-ui/react";
+
+import { useDropzone } from "react-dropzone";
+import { motion } from "framer-motion";
+import { CgAddR } from "react-icons/cg";
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from "react-icons/bs";
+
+interface CustomFile extends File {
+    preview: string;
+}
+
 export default function NewAnnouncement() {
 
     const { colors, sizes } = useTheme();
@@ -32,44 +39,44 @@ export default function NewAnnouncement() {
 
     const router = useRouter();
 
-    const newAnnouncementFormSchema = yup.object().shape({   
+    const newAnnouncementFormSchema = yup.object().shape({
         name: yup.string().required('Nome obrigatório'),
         price: yup.string().required('Preço é obrigatório'),
         description: yup.string().required('Descreva seu produto'),
-    }); 
-    const {register, handleSubmit, formState} = useForm<AdsDTO>({
+    });
+    const { register, handleSubmit, formState } = useForm<AdsDTO>({
         resolver: yupResolver(newAnnouncementFormSchema)
     });
-    
-    const {errors} = formState
+
+    const { errors } = formState
 
     const [selectedImage, setSelectedImage] = React.useState('');
-    const [images, setImages] = useState<string[]>([]); 
+    const [images, setImages] = useState<string[]>([]);
     const [statusProduto, setStatusProduto] = useState<string | undefined>(undefined);
     const [switchValue, setSwitchValue] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState<string[]>([])
 
-    function handleGoPreview(){
+    function handleGoPreview() {
         router.push(`/preview`);
     };
 
-    function handleGoHome(){
+    function handleGoHome() {
         router.push(`/home`);
     };
 
-    function RadioStatusProduct(){
+    function RadioStatusProduct() {
         return (
             <RadioGroup
                 name="radioGroupStatusProduto"
                 value={statusProduto}
-                onChange={(nextValue) => {setStatusProduto(nextValue)}}              
+                onChange={(nextValue) => { setStatusProduto(nextValue) }}
             >
                 <HStack
                     justifyContent="space-between"
                     alignItems="center"
                     w="30%"
                     mt={3}
-                    color="gray.600" 
+                    color="gray.600"
                     fontSize='sm'
                 >
                     <Radio size='sm' value="new" my={1}>
@@ -79,13 +86,13 @@ export default function NewAnnouncement() {
                     <Radio size='sm' value="used" my={1}>
                         Produto usado
                     </Radio>
-                </HStack>       
+                </HStack>
             </RadioGroup>
         );
     };
 
-    function Switches(){
-        const toggleSwitch = () => { setSwitchValue(!switchValue)};
+    function Switches() {
+        const toggleSwitch = () => { setSwitchValue(!switchValue) };
         return (
             <VStack alignItems="flex-start">
                 <Switch
@@ -108,18 +115,18 @@ export default function NewAnnouncement() {
         }, 2000);
     }
 
-    function getConverteStatusProdutoBoolean(status : string): boolean {
+    function getConverteStatusProdutoBoolean(status: string): boolean {
         if (statusProduto == "new") {
             return true;
         } else {
             return false;
         }
-    } 
+    }
 
     async function handleNewAd({ name, price, description }: AdsDTO) {
-        try {  
+        try {
 
-            if(paymentMethods.length === 0) {
+            if (paymentMethods.length === 0) {
                 toast.warning('Atenção! Por favor, escolha um método de pagamento.', {
                     position: "top-right",
                     autoClose: 5000,
@@ -129,11 +136,11 @@ export default function NewAnnouncement() {
                     draggable: true,
                     progress: undefined,
                     theme: "colored",
-                });        
+                });
                 return
             }
 
-            if ( !statusProduto ) {
+            if (!statusProduto) {
                 toast.warning('Atenção! Por favor, status para seu produto.', {
                     position: "top-right",
                     autoClose: 5000,
@@ -143,11 +150,11 @@ export default function NewAnnouncement() {
                     draggable: true,
                     progress: undefined,
                     theme: "colored",
-                });        
+                });
                 return
             }
 
-            if ( !images ) {
+            if (!images) {
                 toast.warning('Atenção! Por favor, escolha uma imagem.', {
                     position: "top-right",
                     autoClose: 5000,
@@ -157,31 +164,31 @@ export default function NewAnnouncement() {
                     draggable: true,
                     progress: undefined,
                     theme: "colored",
-                });        
+                });
                 return
-            }   
+            }
 
             handleLoading()
 
             const data = {
                 name: name,
                 description: description,
-                is_new:  getConverteStatusProdutoBoolean(statusProduto),
+                is_new: getConverteStatusProdutoBoolean(statusProduto),
                 price: price,
-                accept_trade:  switchValue,
+                accept_trade: switchValue,
                 payment_methods: paymentMethods,
                 // images: images.map(image => ({ url: image })),
                 images: images
             }
-            
+
             await storageAdsSave(data);
             handleGoPreview()
             // setIsLoading(false)
             // handleOpenPreview();      
-                  
+
         } catch (error) {
             setIsLoading(false);
-        
+
             toast.error('Ocorreu um erro, tente mais tarde!', {
                 position: "top-right",
                 autoClose: 5000,
@@ -192,104 +199,146 @@ export default function NewAnnouncement() {
                 progress: undefined,
                 theme: "colored",
             });
-        }        
+        }
     }
-    
+
+    const [files, setFiles] = useState<CustomFile[]>([]);
+    const { getRootProps, getInputProps, acceptedFiles, fileRejections } = useDropzone({
+        maxFiles: 5,
+        // implementando tipo de arquivos aceitos
+        accept: {
+            "image/png": [".png", ".jpg"],
+            "text/html": [".html", ".htm"],
+        },
+        onDrop: (acceptedFiles) => {
+            const updatedFiles: CustomFile[] = acceptedFiles.map((file) =>
+                Object.assign(file, {
+                    preview: URL.createObjectURL(file),
+                })
+            );
+            setFiles(updatedFiles);
+        },
+    });
+
+    const acceptedFileItems = acceptedFiles.map((file) => (
+        <ListItem key={file.name}>{file.name}</ListItem>
+    ));
+
+    const fileRejectionItems = fileRejections.map(({ file }) => {
+        return <ListItem key={file.name}>{file.name}</ListItem>;
+    });
+
+    const removeFile = (fileToRemove: CustomFile) => {
+        const updatedFiles = files.filter((file) => file !== fileToRemove);
+        setFiles(updatedFiles);
+    };
+
+    const Preview = files.map((file) => (
+        <Box key={file.name} borderWidth="1px" borderRadius="lg" p={1} m={2} position="relative">
+            <IconButton
+                aria-label="Excluir"
+                bg="red"
+                size="sm"
+                onClick={() => removeFile(file)}
+                position="absolute"
+                top={2}
+                right={2}
+                zIndex={1}
+            >
+                <Box color="white">
+                    {/* <FaTrashCan /> */}
+                </Box>
+            </IconButton>
+
+            <Box position="relative">
+                {file.type.startsWith("image/") ? (
+                    <img src={file.preview} alt={file.name} width="100%" height="100%" />
+                ) : (
+                    <iframe src={file.preview} title={file.name} width="100%" height="300px" />
+                )}
+            </Box>
+        </Box>
+    ));
+
+
     return (
 
-        <Flex direction="column" height="100vh"> 
-            <Header/>   
-            
-            <Flex width="100%" my="6" maxWidth={1250} mx="auto" px="6">
-                <SideBar /> 
-                <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'> 
-                    <Flex direction="column">        
-                        <HStack 
-                            justifyContent="space-between" 
-                            alignItems="center"   
-                            spacing={5}                                   
+        <Flex direction="column" height="100vh">
+            <NewHeader />
+
+            <Flex width="100%" my="6" maxWidth={1000} mx="auto" px="6">
+                {/* <SideBar />  */}
+                <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start" bg='gray.100'>
+                    <Flex direction="column">
+                        <motion.div
+                            initial={{ opacity: 0, y: -50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 150 }}
+                            transition={{ duration: 0.8 }}
+                            style={{ width: "100%", display: "flex", justifyContent: "flex-start", alignItems: "center" }}
                         >
-                            <Heading size="md" fontWeight="normal" color="blue.500">Crie um novo anúncio</Heading>
-                        </HStack>
+                            <HStack
+                                justifyContent="space-between"
+                                alignItems="center"
+                                spacing={2}
+                            >
+                                <CgAddR color={colors.blue[500]} size={sizes[6]} />
+                                <Heading size="md" fontWeight="normal" color="blue.500">Crie um novo anúncio</Heading>
+                            </HStack>
+                        </motion.div>
                         <Divider my="2" borderColor="blue.500" ></Divider>
 
                         <Text color="gray.600" fontSize="md" mt={3} fontWeight="bold">Imagens</Text>
-                        <Text color="gray.600" fontSize="sm" mt={3}>
-                            Escolha até 3 imagens para mostrar o quanto seu produto é incrível
+                        <Text color="gray.600" fontSize="md" mt={3}>
+                            Escolha até 5 imagens para mostrar o quanto seu produto é incrível
                         </Text>
 
-                        
-                        
-                        <HStack position="relative" w="100%" h="100%" mt={5}>
+                        <motion.div
+                            initial={{ opacity: 0, y: -50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 150 }}
+                            transition={{ duration: 0.8 }}
+                            style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
+                        >
+                            <HStack position="relative" w="100%" h="100%" mt={5}>
+                                <VStack spacing={4} w="100%" h="100%">
+                                    <Center w="100%" h="100%">
+                                        <Box
+                                            {...getRootProps({ className: "dropzone" })}
+                                            p={4}
+                                            borderWidth={2}
+                                            borderColor="blue.300"
+                                            borderStyle="dashed"
+                                            borderRadius="md"
+                                            textAlign="center"
+                                            w='100%'
+                                            cursor={'pointer'}
+                                        >
+                                            <input {...getInputProps()} />
+                                            <Text> Drop some files and photos here or click to select files...</Text>
+                                        </Box>
+                                    </Center>
 
-                            {/* <Box position="relative" w="80%" h="150px">
-                                <Dropzone onFileUploaded={setImages} />
-                            </Box> */}
+                                    <Box display="flex" justifyContent="center" alignItems="center" w='100%'>
+                                        <Box w="50%" px={2} borderRightWidth={1} borderColor="gray.300">
+                                            <Text fontSize="lg" fontWeight="bold" textAlign={'center'}>Accepted Files</Text>
+                                            <UnorderedList color={'blue.300'} mt={1}>{acceptedFileItems}</UnorderedList>
+                                        </Box>
+                                        <Box w="50%" px={2}>
+                                            <Text fontSize="lg" fontWeight="bold" textAlign={'center'}>Rejected Files</Text>
+                                            <UnorderedList color={'red.300'} pl={2} mt={1}>{fileRejectionItems}</UnorderedList>
+                                        </Box>
+                                    </Box>
 
-                            {/* {images.length > 0 && (
-                                <>
-                                    {images.map((image: any) => {
-                                        return (
-                                            <Box position="relative" w="80%" h="150px">
-                                                <Dropzone onFileUploaded={setImages} key={image}/>
-                                            </Box>
-                                        );
-                                    })}
-                                </>
-                            )} */}
-
-                            
-
-                            <Box position="relative" w="80%" h="150px">
-                                <Image
-                                    h={'150px'}
-                                    w={'100%'} 
-                                    src={
-                                        'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
-                                    }
-                                    objectFit={'cover'}
-                                    borderRadius={10}
-                                />
-                                <HStack
-                                    justifyContent="space-between"
-                                    w="100%"
-                                    bg="transparent"
-                                    bgColor="transparent"
-                                    padding={2}
-                                    position="absolute"
-                                    top={0}
-                                    zIndex={1}
-                                >
-                                    <Box/>
-                                    <Button borderRadius="100%" size="xs">X</Button>
-                                </HStack>
-                            </Box>
-
-                            <Box position="relative" w="80%" h="150px">
-                                <Image
-                                    h={'150px'}
-                                    w={'100%'} 
-                                    src={
-                                        'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
-                                    }
-                                    objectFit={'cover'}
-                                    borderRadius={10}
-                                />
-                                <HStack
-                                    justifyContent="space-between"
-                                    w="100%"
-                                    bg="transparent"
-                                    bgColor="transparent"
-                                    padding={2}
-                                    position="absolute"
-                                    top={0}
-                                    zIndex={1}
-                                >
-                                    <Box/>
-                                    <Button borderRadius="100%" size="xs">X</Button>
-                                </HStack>
-                            </Box>
-                        </HStack>
+                                    <Box w="100%">
+                                        <Text fontSize="lg" fontWeight="bold">Files Preview</Text>
+                                        <Box display="flex" flexWrap="wrap">
+                                            {Preview}
+                                        </Box>
+                                    </Box>
+                                </VStack>
+                            </HStack>
+                        </motion.div>
 
                         <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Sobre o produto</Text>
 
@@ -302,7 +351,7 @@ export default function NewAnnouncement() {
                                     error={errors.name}
                                     register={register}
                                     options={{
-                                    required: 'É necessário informar um nome para o anúncio.',
+                                        required: 'É necessário informar um nome para o anúncio.',
                                     }}
                                 />
                             </FormControl>
@@ -317,13 +366,13 @@ export default function NewAnnouncement() {
                                     error={errors.description}
                                     register={register}
                                     options={{
-                                    required: 'É necessário informar a descrição do anúncio.',
+                                        required: 'É necessário informar a descrição do anúncio.',
                                     }}
                                 />
                             </FormControl>
                         </Stack>
 
-                        <RadioStatusProduct/>
+                        <RadioStatusProduct />
 
                         <Text color="gray.600" fontSize="md" mt={3} fontWeight="bold">Venda</Text>
 
@@ -336,27 +385,27 @@ export default function NewAnnouncement() {
                                     error={errors.price}
                                     register={register}
                                     options={{
-                                    required: 'É necessário informar um valor para o anúncio.',
+                                        required: 'É necessário informar um valor para o anúncio.',
                                     }}
                                 />
                             </FormControl>
-                        </Stack> 
+                        </Stack>
 
                         <Text color="gray.600" fontSize="md" mt={3} fontWeight="bold">Aceita troca?</Text>
 
-                        <Switches/>
+                        <Switches />
 
                         <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Métodos de pagamento</Text>
 
-                        <CheckboxGroup 
-                            colorScheme='blue' 
-                            onChange={setPaymentMethods} 
-                            value={paymentMethods} 
+                        <CheckboxGroup
+                            colorScheme='blue'
+                            onChange={setPaymentMethods}
+                            value={paymentMethods}
                             accessibilityLabel="choose numbers"
                         >
                             <VStack spacing={[1, 2]} direction={['column']} alignItems="left" justify="flex-start" mt={3}>
                                 <Checkbox value='boleto' color="gray.500" size='sm'>Boleto</Checkbox>
-                                <Checkbox value='pix'color="gray.500" size='sm'>Pix</Checkbox>
+                                <Checkbox value='pix' color="gray.500" size='sm'>Pix</Checkbox>
                                 <Checkbox value='cash' color="gray.500" size='sm'>Dinheiro</Checkbox>
                                 <Checkbox value='card' color="gray.500" size='sm'>Cartão Crédito</Checkbox>
                                 <Checkbox value='deposit' color="gray.500" size='sm'>Depósito Bancário</Checkbox>
@@ -366,7 +415,7 @@ export default function NewAnnouncement() {
                         <HStack justifyContent='space-between' w='100%' mt={5} mb={10}>
                             <ButtonDefault
                                 title="Cancelar"
-                                // icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
+                                icon={<BsFillArrowLeftCircleFill color={colors.gray[200]} size={sizes[4]} />}
                                 variant="base1"
                                 size="half"
                                 onClick={handleGoHome}
@@ -375,31 +424,18 @@ export default function NewAnnouncement() {
 
                             <ButtonDefault
                                 title="Avançar"
-                                // icon={<BsPlusCircle color={colors.gray[200]} size={sizes[4]}/>}
+                                icon={<BsFillArrowRightCircleFill color={colors.gray[200]} size={sizes[4]} />}
                                 variant="base2"
                                 size="half"
                                 onClick={handleSubmit(handleNewAd)}
                                 isLoading={isLoading}
                             />
-
-                            {/* <Button 
-                                bg='gray.700' 
-                                color="gray.200" 
-                                isLoading={isLoading}
-                                loadingText="Aguarde..."
-                                spinnerPlacement="end"
-                                onClick={handleSubmit(handleNewAd)} 
-                                w="48%"
-                            >
-                                Avançar
-                            </Button> */}
                         </HStack>
                     </Flex>
                 </SimpleGrid>
-                <ToastContainer/>  
+                <ToastContainer />
             </Flex>
         </Flex>
     )
 }
-    
-  
+
