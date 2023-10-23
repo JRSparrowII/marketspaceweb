@@ -1,4 +1,5 @@
 'use client'
+
 import { Box, Divider, Flex, HStack, Input, InputGroup, InputRightElement, Text, VStack, useBreakpointValue, useDisclosure, useTheme } from '@chakra-ui/react'
 // import { SearchBox } from './SearchBox'
 // import { Logo } from './Logo';
@@ -33,7 +34,7 @@ export default function Header() {
   const { colors, sizes } = useTheme();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const Spacer = ({ children }) => (
+  const Spacer = ({ children } : any) => (
     <Box flex="1" display="flex">
       {children}
     </Box>
@@ -104,13 +105,21 @@ export default function Header() {
           }
         </HStack>
 
-        <HStack alignItems="center" display="flex" w="100%" h="20" mt={1} maxWidth={1480}>
-          <Logo />
-          <Spacer>
-            <SearchBox />
-          </Spacer>
-          <Profile showProfileData={isWideVersion} />
-        </HStack>
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 150 }}
+          transition={{ duration: 0.8 }}
+          style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
+        >
+          <HStack justifyContent={'space-between'} alignItems="center" display="flex" w="100%" h="20" mt={1} maxWidth={1480}>
+            <Logo />
+            <Spacer>
+              <SearchBox />
+            </Spacer>
+            <Profile showProfileData={isWideVersion} />
+          </HStack>
+        </motion.div>
 
         <Box w="70%" mt={10}>
           <Divider borderColor="gray.400"></Divider>

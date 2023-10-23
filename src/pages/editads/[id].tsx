@@ -77,7 +77,7 @@ export default function EditAds() {
             // setImages(response.images)
             setName(response?.name);
             setDescription(response?.description);
-            setStatusProduto(convertStatusProdutoToString);
+            // setStatusProduto(convertStatusProdutoToString);
             setPrice(response?.price);
             setSwitchValue(response?.accept_trade);
             // setPaymentMethods(response?.payment_methods)
@@ -269,9 +269,9 @@ export default function EditAds() {
                         
                         <HStack position="relative" w="100%" h="100%" mt={5}>
 
-                            <Box position="relative" w="80%" h="150px">
+                            {/* <Box position="relative" w="80%" h="150px">
                                 <Dropzone onFileUploaded={setImages} />
-                            </Box>
+                            </Box> */}
 
                             {/* {images.length > 0 && (
                                 <>
@@ -341,7 +341,7 @@ export default function EditAds() {
                         <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Sobre o produto</Text>
 
                         <Stack w={'100%'} mt={5}>
-                            <FormControl>
+                            {/* <FormControl>
                                 <Input
                                     placeholder='Título do seu anúncio'
                                     name='name'
@@ -354,12 +354,12 @@ export default function EditAds() {
                                     required: 'É necessário informar um nome para o anúncio.',
                                     }}
                                 />
-                            </FormControl>
+                            </FormControl> */}
                         </Stack>
 
                         <Stack w={'100%'} mt={3}>
                             <FormControl>
-                                <Input
+                                {/* <Input
                                     placeholder='Descrição do seu anúncio'
                                     name='description'
                                     type={'text'}
@@ -370,7 +370,7 @@ export default function EditAds() {
                                     options={{
                                     required: 'É necessário informar a descrição do anúncio.',
                                     }}
-                                />
+                                /> */}
                             </FormControl>
                         </Stack>
 
@@ -380,7 +380,7 @@ export default function EditAds() {
 
                         <Stack w={'100%'} mt={3}>
                             <FormControl>
-                                <Input
+                                {/* <Input
                                     placeholder='Valor do produto'
                                     name='price'
                                     type={'text'}
@@ -391,7 +391,7 @@ export default function EditAds() {
                                     options={{
                                     required: 'É necessário informar um valor para o anúncio.',
                                     }}
-                                />
+                                /> */}
                             </FormControl>
                         </Stack> 
 
@@ -401,7 +401,7 @@ export default function EditAds() {
 
                         <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Métodos de pagamento</Text>
 
-                        <CheckboxGroup 
+                        {/* <CheckboxGroup 
                             colorScheme='blue' 
                             onChange={setPaymentMethods} 
                             value={paymentMethods} 
@@ -414,7 +414,7 @@ export default function EditAds() {
                                 <Checkbox value='card' color="gray.500" size='sm'>Cartão Crédito</Checkbox>
                                 <Checkbox value='deposit' color="gray.500" size='sm'>Depósito Bancário</Checkbox>
                             </VStack>
-                        </CheckboxGroup>
+                        </CheckboxGroup> */}
 
                         <HStack justifyContent='space-between' w='100%' mt={5} mb={10}>
                             <ButtonDefault

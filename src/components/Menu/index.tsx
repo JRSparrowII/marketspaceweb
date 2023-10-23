@@ -14,7 +14,7 @@ export default function Menu({color}: MenuProps){
     // const navigate = useNavigate();
 
     function handleClickGoHome() {
-        // navigate('/');
+        router.push(`/home`);
     }
 
     function handleGoNewAnnouncement() {
@@ -39,6 +39,7 @@ export default function Menu({color}: MenuProps){
 
     return(
         <HStack justifyContent={'center'} alignItems={'center'} gap={8}>       
+            <LinkMenu titleMenu='Home' fontColorLink={color} onClick={handleClickGoHome}/>
             <LinkMenu titleMenu='New annoucement' fontColorLink={color} onClick={handleGoNewAnnouncement}/>
             <LinkMenu titleMenu='Products for Sale' fontColorLink={color} onClick={handleClickGoListBoat}/>
             <LinkMenu titleMenu='My annoucement' fontColorLink={color} onClick={handleGoMyAnnouncement}/>
