@@ -132,12 +132,12 @@ export default function ProductDetails() {
               spacing={2}                                   
             >
               <CgFileDocument color={colors.blue[500]} size={sizes[6]}/>
-              <Heading size="md" fontWeight="normal" color="blue.500">
+              <Heading size="md" fontWeight="bold" color="blue.500">
                   Detalhes do produto
               </Heading>
             </HStack>
             <Divider my="2" mb={5} borderColor="blue.500" ></Divider>
-            <Heading size="md" fontWeight="normal" color="blue.500" mb={5}>{product.name}</Heading>
+            
             <SimpleGrid
               columns={{ sm: 2, md: 2 }}
               // templateColumns="65% 35%"
@@ -171,6 +171,7 @@ export default function ProductDetails() {
               >
 
                 <Stack h={'550px'} bg={'white'} px={5} position={'relative'}>
+                  <Heading size="md" fontWeight="bold" color="blue.500" mt={5}>{product.name}</Heading>
                   <HStack
                     justifyContent="space-between"
                     alignItems="center"
@@ -178,7 +179,7 @@ export default function ProductDetails() {
                     mt={5}
                     mb={5}
                   >
-                    <Text color="gray.600">
+                    <Text color="gray.600" mt={2}>
                       Vendido e distribuido por:
                       <strong> {user.name}</strong>
                     </Text>
