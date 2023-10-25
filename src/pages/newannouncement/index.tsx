@@ -26,7 +26,7 @@ import { Center, UnorderedList, ListItem, IconButton } from "@chakra-ui/react";
 import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
 import { CgAddR } from "react-icons/cg";
-import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill } from "react-icons/bs";
+import { BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill, BsTrash } from "react-icons/bs";
 
 interface CustomFile extends File {
     preview: string;
@@ -52,6 +52,7 @@ export default function NewAnnouncement() {
 
     const [selectedImage, setSelectedImage] = React.useState('');
     const [images, setImages] = useState<string[]>([]);
+    const [files, setFiles] = useState<CustomFile[]>([]);
     const [statusProduto, setStatusProduto] = useState<string | undefined>(undefined);
     const [switchValue, setSwitchValue] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState<string[]>([])
@@ -70,6 +71,7 @@ export default function NewAnnouncement() {
                 name="radioGroupStatusProduto"
                 value={statusProduto}
                 onChange={(nextValue) => { setStatusProduto(nextValue) }}
+                w={'100%'}
             >
                 <HStack
                     justifyContent="space-between"
@@ -94,7 +96,7 @@ export default function NewAnnouncement() {
     function Switches() {
         const toggleSwitch = () => { setSwitchValue(!switchValue) };
         return (
-            <VStack alignItems="flex-start">
+            <VStack alignItems="flex-start" w={'100%'}>
                 <Switch
                     onChange={toggleSwitch}
                     isChecked={switchValue}
@@ -154,7 +156,7 @@ export default function NewAnnouncement() {
                 return
             }
 
-            if (!images) {
+            if (!files) {
                 toast.warning('Atenção! Por favor, escolha uma imagem.', {
                     position: "top-right",
                     autoClose: 5000,
@@ -177,13 +179,16 @@ export default function NewAnnouncement() {
                 price: price,
                 accept_trade: switchValue,
                 payment_methods: paymentMethods,
-                // images: images.map(image => ({ url: image })),
-                images: images
+                images: files.map(image => ({ url: image })),
+                // images: images
             }
+
+            // console.log('aqui as 12:37 =>', data)
+            // return
 
             await storageAdsSave(data);
             handleGoPreview()
-            // setIsLoading(false)
+            // setIsLoading(false) 
             // handleOpenPreview();      
 
         } catch (error) {
@@ -202,7 +207,6 @@ export default function NewAnnouncement() {
         }
     }
 
-    const [files, setFiles] = useState<CustomFile[]>([]);
     const { getRootProps, getInputProps, acceptedFiles, fileRejections } = useDropzone({
         maxFiles: 5,
         // implementando tipo de arquivos aceitos
@@ -237,16 +241,17 @@ export default function NewAnnouncement() {
         <Box key={file.name} borderWidth="1px" borderRadius="lg" p={1} m={2} position="relative">
             <IconButton
                 aria-label="Excluir"
-                bg="red"
+                bg="red.500"
                 size="sm"
                 onClick={() => removeFile(file)}
                 position="absolute"
                 top={2}
                 right={2}
                 zIndex={1}
+                _hover={{ bg: 'red.600' }}
             >
                 <Box color="white">
-                    {/* <FaTrashCan /> */}
+                    <BsTrash />
                 </Box>
             </IconButton>
 
@@ -342,95 +347,113 @@ export default function NewAnnouncement() {
 
                         <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Sobre o produto</Text>
 
-                        <Stack w={'100%'} mt={5}>
-                            <FormControl>
-                                <Input
-                                    placeholder='Título do seu anúncio'
-                                    name='name'
-                                    type={'text'}
-                                    error={errors.name}
-                                    register={register}
-                                    options={{
-                                        required: 'É necessário informar um nome para o anúncio.',
-                                    }}
-                                />
-                            </FormControl>
-                        </Stack>
-
-                        <Stack w={'100%'} mt={3}>
-                            <FormControl>
-                                <Input
-                                    placeholder='Descrição do seu anúncio'
-                                    name='description'
-                                    type={'text'}
-                                    error={errors.description}
-                                    register={register}
-                                    options={{
-                                        required: 'É necessário informar a descrição do anúncio.',
-                                    }}
-                                />
-                            </FormControl>
-                        </Stack>
-
-                        <RadioStatusProduct />
-
-                        <Text color="gray.600" fontSize="md" mt={3} fontWeight="bold">Venda</Text>
-
-                        <Stack w={'100%'} mt={3}>
-                            <FormControl>
-                                <Input
-                                    placeholder='Valor do produto'
-                                    name='price'
-                                    type={'text'}
-                                    error={errors.price}
-                                    register={register}
-                                    options={{
-                                        required: 'É necessário informar um valor para o anúncio.',
-                                    }}
-                                />
-                            </FormControl>
-                        </Stack>
-
-                        <Text color="gray.600" fontSize="md" mt={3} fontWeight="bold">Aceita troca?</Text>
-
-                        <Switches />
-
-                        <Text color="gray.600" fontSize="md" mt={5} fontWeight="bold">Métodos de pagamento</Text>
-
-                        <CheckboxGroup
-                            colorScheme='blue'
-                            onChange={setPaymentMethods}
-                            value={paymentMethods}
-                            accessibilityLabel="choose numbers"
+                        <motion.div
+                            initial={{ opacity: 0, y: -50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 150 }}
+                            transition={{ duration: 0.8 }}
+                            style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}
                         >
-                            <VStack spacing={[1, 2]} direction={['column']} alignItems="left" justify="flex-start" mt={3}>
-                                <Checkbox value='boleto' color="gray.500" size='sm'>Boleto</Checkbox>
-                                <Checkbox value='pix' color="gray.500" size='sm'>Pix</Checkbox>
-                                <Checkbox value='cash' color="gray.500" size='sm'>Dinheiro</Checkbox>
-                                <Checkbox value='card' color="gray.500" size='sm'>Cartão Crédito</Checkbox>
-                                <Checkbox value='deposit' color="gray.500" size='sm'>Depósito Bancário</Checkbox>
+                            <VStack w={'100%'}>
+                                <Stack w={'100%'} mt={5}>
+                                    <FormControl>
+                                        <Input
+                                            placeholder='Título do seu anúncio'
+                                            name='name'
+                                            type={'text'}
+                                            error={errors.name}
+                                            register={register}
+                                            options={{
+                                                required: 'É necessário informar um nome para o anúncio.',
+                                            }}
+                                        />
+                                    </FormControl>
+                                </Stack>
+
+                                <Stack w={'100%'} mt={3}>
+                                    <FormControl>
+                                        <Input
+                                            placeholder='Descrição do seu anúncio'
+                                            name='description'
+                                            type={'text'}
+                                            error={errors.description}
+                                            register={register}
+                                            options={{
+                                                required: 'É necessário informar a descrição do anúncio.',
+                                            }}
+                                        />
+                                    </FormControl>
+                                </Stack>
+
+                                <RadioStatusProduct />
+
+                                <Text w={'100%'} color="gray.600" fontSize="md" mt={3} fontWeight="bold">Venda</Text>
+
+                                <Stack w={'100%'} mt={3}>
+                                    <FormControl>
+                                        <Input
+                                            placeholder='Valor do produto'
+                                            name='price'
+                                            type={'text'}
+                                            error={errors.price}
+                                            register={register}
+                                            options={{
+                                                required: 'É necessário informar um valor para o anúncio.',
+                                            }}
+                                        />
+                                    </FormControl>
+                                </Stack>
+
+                                <Text w={'100%'} color="gray.600" fontSize="md" mt={3} fontWeight="bold">Aceita troca?</Text>
+
+                                <Switches />
+
+                                <Text w={'100%'} color="gray.600" fontSize="md" mt={5} fontWeight="bold">Métodos de pagamento</Text>
+
+                                <CheckboxGroup
+                                    colorScheme='blue'
+                                    onChange={setPaymentMethods}
+                                    value={paymentMethods}
+                                    accessibilityLabel="choose numbers"
+                                >
+                                    <VStack w={'100%'} spacing={[1, 2]} direction={['column']} alignItems="left" justify="flex-start" mt={3}>
+                                        <Checkbox value='boleto' color="gray.500" size='sm'>Boleto</Checkbox>
+                                        <Checkbox value='pix' color="gray.500" size='sm'>Pix</Checkbox>
+                                        <Checkbox value='cash' color="gray.500" size='sm'>Dinheiro</Checkbox>
+                                        <Checkbox value='card' color="gray.500" size='sm'>Cartão Crédito</Checkbox>
+                                        <Checkbox value='deposit' color="gray.500" size='sm'>Depósito Bancário</Checkbox>
+                                    </VStack>
+                                </CheckboxGroup>
                             </VStack>
-                        </CheckboxGroup>
+                        </motion.div>
 
-                        <HStack justifyContent='space-between' w='100%' mt={5} mb={10}>
-                            <ButtonDefault
-                                title="Cancelar"
-                                icon={<BsFillArrowLeftCircleFill color={colors.gray[200]} size={sizes[4]} />}
-                                variant="base1"
-                                size="half"
-                                onClick={handleGoHome}
-                                isLoading={isLoading}
-                            />
+                        <motion.div
+                            initial={{ opacity: 0, y: 50, scale: 0.3 }}
+                            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 50, scale: 0.3 }}
+                            transition={{ duration: 0.3 }}
+                            className='origin-center'
+                        >
+                            <HStack justifyContent='space-between' w='100%' mt={5} mb={10}>
+                                <ButtonDefault
+                                    title="Cancelar"
+                                    icon={<BsFillArrowLeftCircleFill color={colors.gray[200]} size={sizes[4]} />}
+                                    variant="base1"
+                                    size="half"
+                                    onClick={handleGoHome}
+                                    isLoading={isLoading}
+                                />
 
-                            <ButtonDefault
-                                title="Avançar"
-                                icon={<BsFillArrowRightCircleFill color={colors.gray[200]} size={sizes[4]} />}
-                                variant="base2"
-                                size="half"
-                                onClick={handleSubmit(handleNewAd)}
-                                isLoading={isLoading}
-                            />
-                        </HStack>
+                                <ButtonDefault
+                                    title="Avançar"
+                                    icon={<BsFillArrowRightCircleFill color={colors.gray[200]} size={sizes[4]} />}
+                                    variant="base2"
+                                    size="half"
+                                    onClick={handleSubmit(handleNewAd)}
+                                    isLoading={isLoading}
+                                />
+                            </HStack>
+                        </motion.div>
                     </Flex>
                 </SimpleGrid>
                 <ToastContainer />
