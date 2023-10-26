@@ -145,7 +145,7 @@ export default function SignIn() {
           // mb={50}
           borderRadius={8}
         >
-          <Flex flexDir="column" mb={5} mt={10} justify="center" align="center">
+          <Flex flexDir="column" mb={2} mt={5} justify="center" align="center">
             <Image
               src="images/logo.svg"
               width={20}
@@ -166,7 +166,7 @@ export default function SignIn() {
           {!showRegisterForm ? (
             <>
               {!showForgotPassword && (
-                <VStack px={20} spacing={3} mb={20}>
+                <VStack px={20} spacing={3} mb={10}>
                   <Stack w={'100%'}>
                     <FormControl>
                       <Input
@@ -202,7 +202,7 @@ export default function SignIn() {
                     size="total"
                     variant="base1"
                     onClick={handleSubmit(handleSignIn)}
-                  // isLoading={isLoading}
+                    isLoading={isLoading}
                   />
 
                 </VStack>
@@ -229,21 +229,22 @@ export default function SignIn() {
                     // icon={FcGoogle} 
                     // isLoading={isLoading}
                     />
-                  </VStack>
 
-                  <HStack alignItems="center" justifyContent="space-between" px="20">
-                    <Checkbox value='password' color="gray.500" size='sm'>Lembrar minha senha</Checkbox>
+                  <HStack alignItems="center" justifyContent="space-between" pt="0.5rem">
+                    <Checkbox pr={10} value='password' color="gray.500" size='sm'>Lembrar minha senha</Checkbox>
                     <Link
                       href="#"
-                      // onClick={() => setShowRegisterForm(!showRegisterForm)}
                       onClick={handleForgotPassword}
                     >
-                      Esqueceu a senha
+                      <Text color="blue.500" fontSize="sm" mb={3} fontFamily="body" mt={3}>
+                        Esqueceu a senha
+                      </Text>
                     </Link>
-
-
                   </HStack>
 
+                  </VStack>
+
+                 
                   <VStack p={20} spacing={3}>
                     <Text fontSize="14" color="gray.700" textAlign='center'>Ainda não tem acesso?</Text>
                     <ButtonDefault
