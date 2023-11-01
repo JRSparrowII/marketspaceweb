@@ -163,15 +163,15 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
           borderWidth={2}
           borderColor="blue.300"
           borderStyle="dashed"
-          borderRadius="md"
+          borderRadius="full"
           textAlign="center"
-          w='100%'
+          w='28%'
           cursor={'pointer'}
           // height="200px"
           // bg='red'
         >
           <input {...getInputProps()} />
-          <Text> Drop some files and photos here or click to select files...</Text>
+          <Text> Select your photo...</Text>
         </Box>
       </Center>
 
@@ -186,7 +186,7 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
         </Box>
       </Box> */}
 
-      <Box w="100%">
+      <Box w="30%">
         {/* <Text fontSize="lg" fontWeight="bold">Files Preview</Text> */}
         <Box display="flex" flexWrap="wrap">
           {Preview}
