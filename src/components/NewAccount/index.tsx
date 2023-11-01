@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, InputGroup, Stack, VStack, Text, Icon } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, InputGroup, Stack, VStack, Text } from "@chakra-ui/react";
 import { ButtonDefault } from "../Button";
 import { Input } from '../Input';
 import { useState } from "react";
@@ -11,9 +11,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Center, UnorderedList, ListItem, IconButton } from "@chakra-ui/react";
-// import { FaTrashCan } from "react-icons/fa6";
 
 import { useDropzone } from "react-dropzone";
+import { BsTrash } from "react-icons/bs";
 
 interface CustomFile extends File {
   preview: string;
@@ -70,29 +70,41 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
     <Box key={file.name} borderWidth="1px" borderRadius="lg" p={1} m={2} position="relative">
       <IconButton
         aria-label="Excluir"
-        bg="red"
-        size="sm"
+        bg="red.500"
+        size="xs"
         onClick={() => removeFile(file)}
         position="absolute"
-        top={2}
-        right={2}
+        top={0}
+        right={0}
         zIndex={1}
       >
         <Box color="white">
-          {/* <FaTrashCan /> */}
+          <BsTrash />
         </Box>
       </IconButton>
 
-
-      <Box position="relative">
+      <Box position="relative"
+        w="100px" 
+        h="100px"  
+        borderRadius="full"  
+        borderStyle="dashed"
+        borderColor="blue.300"
+        bg="gray.800"  
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        borderWidth={2}
+        cursor={'pointer'}
+      >
         {file.type.startsWith("image/") ? (
-          <img src={file.preview} alt={file.name} width="30%" height="50%" />
+          <img src={file.preview} alt={file.name} width="100%" height="100%" />
         ) : (
           <iframe src={file.preview} title={file.name} width="30%" height="100px" />
         )}
       </Box>
     </Box>
-  )); 
+  ));
+
 
   const signInFormSchema = yup.object().shape({
     name: yup.string().required('Nome obrigatório'),
@@ -156,43 +168,28 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
       </Flex> */}
 
       <VStack spacing={4}>
-      <Center w='100%'>
-        <Box
-          {...getRootProps({ className: "dropzone" })}
-          p={4}
-          borderWidth={2}
-          borderColor="blue.300"
-          borderStyle="dashed"
-          borderRadius="full"
-          textAlign="center"
-          w='28%'
-          cursor={'pointer'}
-          // height="200px"
-          // bg='red'
-        >
-          <input {...getInputProps()} />
-          <Text> Select your photo...</Text>
-        </Box>
-      </Center>
+        <Center w='100%'>
+          <Box
+            {...getRootProps({ className: "dropzone" })}
+            w="100px" 
+            h="100px"  
+            borderRadius="full"  
+            borderStyle="dashed"
+            borderColor="blue.300"
+            bg="gray.100"  
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            borderWidth={2}
+            cursor={'pointer'}
+          >
+            <input {...getInputProps()} />
+            {Preview}
+          </Box>
+        </Center>
+      </VStack>
 
-      {/* <Box display="flex" justifyContent="center" alignItems="center" w='100%'>
-        <Box w="50%" px={2} borderRightWidth={1} borderColor="gray.300">
-          <Text fontSize="lg" fontWeight="bold" textAlign={'center'}>Accepted Files</Text>
-          <UnorderedList color={'blue.300'} mt={1}>{acceptedFileItems}</UnorderedList>
-        </Box>
-        <Box w="50%" px={2}>
-          <Text fontSize="lg" fontWeight="bold" textAlign={'center'}>Rejected Files</Text>
-          <UnorderedList color={'red.300'} pl={2} mt={1}>{fileRejectionItems}</UnorderedList>
-        </Box>
-      </Box> */}
-
-      <Box w="30%">
-        {/* <Text fontSize="lg" fontWeight="bold">Files Preview</Text> */}
-        <Box display="flex" flexWrap="wrap">
-          {Preview}
-        </Box>
-      </Box>
-    </VStack>
+      <Text fontSize="sm" fontWeight="thin" textAlign={'center'}>Selecione sua foto</Text>
 
       <VStack px={20} spacing={3} mb={20}>
         <Stack w={'100%'}>
