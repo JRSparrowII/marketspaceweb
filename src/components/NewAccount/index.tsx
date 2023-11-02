@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, InputGroup, Stack, VStack, Text, Icon } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, InputGroup, Stack, VStack, Text } from "@chakra-ui/react";
 import { ButtonDefault } from "../Button";
 import { Input } from '../Input';
 import { useState } from "react";
@@ -9,6 +9,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as yup from 'yup'
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+
+import { Center, UnorderedList, ListItem, IconButton } from "@chakra-ui/react";
+
+import { useDropzone } from "react-dropzone";
+import { BsTrash } from "react-icons/bs";
+
+interface CustomFile extends File {
+  preview: string;
+}
 
 type FormDataProps = {
   name: string;
@@ -25,6 +34,77 @@ interface FormRegisterProps {
 export default function NewAccount({ onClick }: FormRegisterProps) {
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [files, setFiles] = useState<CustomFile[]>([]);
+  const { getRootProps, getInputProps, acceptedFiles, fileRejections } = useDropzone({
+    maxFiles: 1,
+    // implementando tipo de arquivos aceitos
+    accept: {
+      "image/png": [".png", ".jpg"],
+      "text/html": [".html", ".htm"],
+    },
+    onDrop: (acceptedFiles) => {
+      const updatedFiles: CustomFile[] = acceptedFiles.map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      );
+      setFiles(updatedFiles);
+    },
+  });
+
+  const acceptedFileItems = acceptedFiles.map((file) => (
+    <ListItem key={file.name}>{file.name}</ListItem>
+  ));
+
+  const fileRejectionItems = fileRejections.map(({ file }) => {
+    return <ListItem key={file.name}>{file.name}</ListItem>;
+  });
+
+  const removeFile = (fileToRemove: CustomFile) => {
+    const updatedFiles = files.filter((file) => file !== fileToRemove);
+    setFiles(updatedFiles);
+  };
+
+  const Preview = files.map((file) => (
+    <Box key={file.name} borderWidth="1px" borderRadius="lg" p={1} m={2} position="relative">
+      <IconButton
+        aria-label="Excluir"
+        bg="red.500"
+        size="xs"
+        onClick={() => removeFile(file)}
+        position="absolute"
+        top={0}
+        right={0}
+        zIndex={1}
+      >
+        <Box color="white">
+          <BsTrash />
+        </Box>
+      </IconButton>
+
+      <Box position="relative"
+        w="100px" 
+        h="100px"  
+        borderRadius="full"  
+        borderStyle="dashed"
+        borderColor="blue.300"
+        bg="gray.800"  
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        borderWidth={2}
+        cursor={'pointer'}
+      >
+        {file.type.startsWith("image/") ? (
+          <img src={file.preview} alt={file.name} width="100%" height="100%" />
+        ) : (
+          <iframe src={file.preview} title={file.name} width="30%" height="100px" />
+        )}
+      </Box>
+    </Box>
+  ));
+
 
   const signInFormSchema = yup.object().shape({
     name: yup.string().required('Nome obrigatório'),
@@ -78,14 +158,38 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
       h="90%"
       borderRadius={8}
     >
-      <Flex flexDir="column" justifyContent='center' alignItems='center'>
+      {/* <Flex flexDir="column" justifyContent='center' alignItems='center'>
         <Text fontSize="20" color="gray.700" fontWeight="bold" textAlign="center">Boas vindas!</Text>
         <Box w='50%' justifyContent='center' alignItems='center'>
           <Text fontSize="12" color="gray.700" textAlign="center">
             Crie sua conta e use o espaço para poder comprar itens variados e vender seus produtos
           </Text>
         </Box>
-      </Flex>
+      </Flex> */}
+
+      <VStack spacing={4}>
+        <Center w='100%'>
+          <Box
+            {...getRootProps({ className: "dropzone" })}
+            w="100px" 
+            h="100px"  
+            borderRadius="full"  
+            borderStyle="dashed"
+            borderColor="blue.300"
+            bg="gray.100"  
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            borderWidth={2}
+            cursor={'pointer'}
+          >
+            <input {...getInputProps()} />
+            {Preview}
+          </Box>
+        </Center>
+      </VStack>
+
+      <Text fontSize="sm" fontWeight="thin" textAlign={'center'}>Selecione sua foto</Text>
 
       <VStack px={20} spacing={3} mb={20}>
         <Stack w={'100%'}>
