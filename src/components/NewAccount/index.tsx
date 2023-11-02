@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, InputGroup, Stack, VStack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, InputGroup, Stack, VStack, Text, FormLabel, FormErrorMessage } from "@chakra-ui/react";
 import { ButtonDefault } from "../Button";
 import { Input } from '../Input';
 import { useState } from "react";
@@ -20,12 +20,18 @@ interface CustomFile extends File {
 }
 
 type FormDataProps = {
+  photo: string;
   name: string;
   email: string;
   telefone: string;
   password: string;
   password_confirm: string;
 }
+
+// type FormDataProps = {
+//   email: string;
+//   password: string;
+// }
 
 interface FormRegisterProps {
   onClick: () => void;
@@ -53,13 +59,13 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
     },
   });
 
-  const acceptedFileItems = acceptedFiles.map((file) => (
-    <ListItem key={file.name}>{file.name}</ListItem>
-  ));
+  // const acceptedFileItems = acceptedFiles.map((file) => (
+  //   <ListItem key={file.name}>{file.name}</ListItem>
+  // ));
 
-  const fileRejectionItems = fileRejections.map(({ file }) => {
-    return <ListItem key={file.name}>{file.name}</ListItem>;
-  });
+  // const fileRejectionItems = fileRejections.map(({ file }) => {
+  //   return <ListItem key={file.name}>{file.name}</ListItem>;
+  // });
 
   const removeFile = (fileToRemove: CustomFile) => {
     const updatedFiles = files.filter((file) => file !== fileToRemove);
@@ -84,12 +90,12 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
       </IconButton>
 
       <Box position="relative"
-        w="100px" 
-        h="100px"  
-        borderRadius="full"  
+        w="100px"
+        h="100px"
+        borderRadius="full"
         borderStyle="dashed"
         borderColor="blue.300"
-        bg="gray.800"  
+        bg="gray.800"
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -106,7 +112,13 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
   ));
 
 
-  const signInFormSchema = yup.object().shape({
+  const NewAccountFormSchema = yup.object().shape({
+    // photo: yup.string().required('Foto obrigatória'),
+    photo: yup
+    .mixed()
+    .test('photoRequired', 'Foto é obrigatória', (file) => {
+      return !!files.length;
+    }),
     name: yup.string().required('Nome obrigatório'),
     email: yup.string().required('E-mail obrigatório').email('E-mail Inválido'),
     telefone: yup.string().required('Digite seu telefone'),
@@ -117,15 +129,18 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
   });
 
   const { register, handleSubmit, formState } = useForm<FormDataProps>({
-    resolver: yupResolver(signInFormSchema)
+    resolver: yupResolver(NewAccountFormSchema)
   });
 
   const { errors } = formState
 
-  async function handleSignUp({ name, email, telefone, password, password_confirm }: FormDataProps) {
+  async function handleSignUp({ photo, name, email, telefone, password, password_confirm}: FormDataProps) {
     try {
+
+      console.log('chegou aqui ')
       setIsLoading(true)
       const dataSignUp = {
+        photo: photo,
         name: name,
         email: email,
         telefone: telefone,
@@ -133,7 +148,7 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
         password_confirm: password_confirm,
       }
 
-      console.log(dataSignUp)
+      console.log('os dados sao =>', dataSignUp)
       toast.success('Sua conta foi criada com sucesso! Volte para a tela de login e aproveite!', {
         position: "top-right",
         autoClose: 5000,
@@ -144,6 +159,8 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
         progress: undefined,
         theme: "colored",
       });
+
+      // return
 
     } catch (error) {
       setIsLoading(false);
@@ -166,30 +183,94 @@ export default function NewAccount({ onClick }: FormRegisterProps) {
           </Text>
         </Box>
       </Flex> */}
+{/* 
+      <FormControl>
+        <VStack spacing={4}>
+          <Center w='80%'>
+            <Box
+              {...getRootProps({ className: "dropzone" })}
+              w="80px"
+              h="80px"
+              borderRadius="full"
+              borderStyle="dashed"
+              borderColor="blue.300"
+              bg="gray.100"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              borderWidth={2}
+              cursor={'pointer'}
+              error={errors.photo}
+              register={register}
+              options={{
+                required: 'É necessário escolher uma foto.',
+              }}
+            >
+              <input {...getInputProps()} />
+              {Preview}
+            </Box>
+          </Center>
+        </VStack>
+      </FormControl> */}
 
-      <VStack spacing={4}>
-        <Center w='100%'>
-          <Box
-            {...getRootProps({ className: "dropzone" })}
-            w="100px" 
-            h="100px"  
-            borderRadius="full"  
-            borderStyle="dashed"
-            borderColor="blue.300"
-            bg="gray.100"  
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            borderWidth={2}
-            cursor={'pointer'}
-          >
-            <input {...getInputProps()} />
-            {Preview}
-          </Box>
-        </Center>
-      </VStack>
+      <FormControl isInvalid={!!errors.photo}>
+  <VStack spacing={4}>
+    <Center w='80%'>
+      <Box
+        {...getRootProps({ className: "dropzone" })}
+        w="80px"
+        h="80px"
+        borderRadius="full"
+        borderStyle="dashed"
+        borderColor="blue.300"
+        bg="gray.100"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        borderWidth={2}
+        cursor={'pointer'}
+      >
+        <input {...getInputProps()} />
+        {Preview}
+      </Box>
+    </Center>
+  </VStack>
+  {errors.photo && <FormErrorMessage fontSize={'xs'} justifyContent={'center'} textAlign={'center'}>
+    {errors.photo.message}
+  </FormErrorMessage>}
+</FormControl>
 
-      <Text fontSize="sm" fontWeight="thin" textAlign={'center'}>Selecione sua foto</Text>
+
+      
+{/* 
+      <FormControl isInvalid={!!errors.photo}>
+        <VStack spacing={4}>
+          <Center w="80%">
+            <Box
+              {...getRootProps({ className: "dropzone" })}
+              w="80px"
+              h="80px"
+              borderRadius="full"
+              borderStyle="dashed"
+              borderColor="blue.300"
+              bg="gray.100"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              borderWidth={2}
+              cursor={'pointer'}
+            >
+              <input {...getInputProps()} />
+              {Preview}
+            </Box>
+          </Center>
+        </VStack>
+        <FormErrorMessage fontSize={'xs'} justifyContent={'center'} textAlign={'center'}>{errors.photo?.message}</FormErrorMessage>
+      </FormControl> */}
+
+      <Text fontSize="sm" fontWeight="thin" textAlign={'center'}>
+        {files.length === 1 ? 'Foto de perfil selecionada' : 'Selecione sua foto'}
+      </Text>
 
       <VStack px={20} spacing={3} mb={20}>
         <Stack w={'100%'}>

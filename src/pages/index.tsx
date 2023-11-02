@@ -59,10 +59,6 @@ export default function SignIn() {
   });
   const { errors } = formState
 
-  function goSignUp() {
-    router.push(`/signup`);
-  }
-
   function handleGoHome() {
     router.push(`/home`);
   };
