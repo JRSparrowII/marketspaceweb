@@ -68,6 +68,7 @@ export default function SignIn() {
 
       setIsLoading(true)
       await signIn(email, password);
+      console.log(email, password)
 
       toast.success('Seu login foi realizado com sucesso!', {
         position: "top-right",
